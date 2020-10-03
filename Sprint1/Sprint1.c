@@ -10,10 +10,14 @@ Booleen EchoActif = FAUX;
 #define MSG_DEVELOPPE "## nouvelle specialite \"%s \" ; cout horaire \"%d\"\n" 
 #define MSG_INTERRUPTION "## fin de programme\n" 
 #define MSG_EMBAUCHE "## nouveau travailleur \"%s\" competent pour la specialite \"%s\"\n"
-#define MSG_CLIENT "## nouveau client \"%s\"\n"
+#define MSG_DEMARCHE "## nouveau client \"%s\"\n"
 #define MSG_TACHE "## la commande \"%s\" requiere la specialite \"%s\" (nombre d’heures \"%d\")\n"
 #define MSG_PROGRESSION "## pour la commande \"%s\", pour la specialite \"%s\" : \"%d\" heures de plus ont ete realisees\n"
-
+#define MSG_SPECIALITES "## consultation des specialites\n"
+#define MSG_TRAVAILLEURS "## consultation des travailleurs competents pour la specialite \"%s\"\n"
+#define MSG_CLIENT "## consultation des commandes effectuees par \"%s\"\n"
+#define MSG_SUPERVISION "## consultation de l’avancement des commandes\n"
+#define MSG_CHARGE "## consultation de la charge de travail de \"%s\"\n"
 // Lexemes -------------------------------------------------------------------- 
 #define LGMOT 35
 #define NBCHIFFREMAX 5 
@@ -31,6 +35,37 @@ int get_int() {
 
 // Instructions --------------------------------------------------------------- 
 
+// Charge ------------------------------
+void traite_charge() {
+	Mot nom_travailleur;
+	get_id(nom_travailleur);
+	printf(MSG_CHARGE, nom_travailleur);
+}
+
+// Supervision -------------------------
+void traite_supervision() {
+	printf(MSG_SUPERVISION);
+}
+
+// Client ------------------------------
+void traite_client() {
+	Mot nom_client;
+	get_id(nom_client);
+	printf(MSG_CLIENT, nom_client);
+}
+
+// Travailleurs ------------------------
+void traite_travailleurs() {
+	Mot nom_specialite;
+	get_id(nom_specialite);
+	printf(MSG_TRAVAILLEURS, nom_specialite);
+}
+
+// Specialités -------------------------
+void traite_specialites() {
+	printf(MSG_SPECIALITES);
+}
+
 // Progression -------------------------
 void traite_progression() {
 	Mot nom_commade, nom_specialite;
@@ -46,14 +81,14 @@ void traite_tache() {
 	getid(nom_commande);
 	get_id(nom_specialite);
 	int nbr_heure = get_int();
-	printf(MSG_TACHE,nom_commande,nom_specialite,nbr_heure);
+	printf(MSG_TACHE, nom_commande, nom_specialite, nbr_heure);
 }
 
 // Client ------------------------------
-void traite_client() {
+void traite_demarche() {
 	Mot nom_client;
 	get_id(nom_client);
-	printf(MSG_CLIENT, nom_client);
+	printf(MSG_DEMARCHE, nom_client);
 }
 // Embauche ----------------------------
 void traite_embauche() {
