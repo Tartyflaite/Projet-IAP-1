@@ -117,6 +117,42 @@ int main(int argc, char* argv[]) {
 	Mot buffer;
 	while (VRAI) {
 		get_id(buffer);
+		if (strcmp(buffer, "charge") == 0) {
+			traite_charge();
+			continue;
+		}
+		if (strcmp(buffer, "supervision") == 0) {
+			traite_supervision();
+			continue;
+		}
+		if (strcmp(buffer, "client") == 0) {
+			traite_client();
+			continue;
+		}
+		if (strcmp(buffer, "travailleurs") == 0) {
+			traite_travailleurs();
+			continue;
+		}
+		if (strcmp(buffer, "specialites") == 0) {
+			traite_specialites();
+			continue;
+		}
+		if (strcmp(buffer, "progression") == 0) {
+			traite_progression();
+			continue;
+		}
+		if (strcmp(buffer, "tache") == 0) {
+			traite_tache();
+			continue;
+		}
+		if (strcmp(buffer, "demarche") == 0) {
+			traite_demarche();
+			continue;
+		}
+		if (strcmp(buffer, "embauche") == 0) {
+			traite_embauche();
+			continue;
+		}
 		if (strcmp(buffer, "developpe") == 0) {
 			traite_developpe();
 			continue;
