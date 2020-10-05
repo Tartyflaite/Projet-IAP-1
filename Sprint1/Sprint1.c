@@ -7,7 +7,7 @@ typedef enum { FAUX = 0, VRAI = 1 } Booleen;
 Booleen EchoActif = FAUX;
 
 // Messages emis par les instructions -----------------------------------------
-#define MSG_DEVELOPPE "## nouvelle specialite \"%s \" ; cout horaire \"%d\"\n" 
+#define MSG_DEVELOPPE "## nouvelle specialite \"%s\" ; cout horaire \"%d\"\n" 
 #define MSG_INTERRUPTION "## fin de programme\n" 
 #define MSG_EMBAUCHE "## nouveau travailleur \"%s\" competent pour la specialite \"%s\"\n"
 #define MSG_DEMARCHE "## nouveau client \"%s\"\n"
@@ -18,6 +18,7 @@ Booleen EchoActif = FAUX;
 #define MSG_CLIENT "## consultation des commandes effectuees par \"%s\"\n"
 #define MSG_SUPERVISION "## consultation de l’avancement des commandes\n"
 #define MSG_CHARGE "## consultation de la charge de travail de \"%s\"\n"
+#define MSG_COMMANDE "## nouvelle commande \"%s\", par client \"%s\"\n"
 // Lexemes -------------------------------------------------------------------- 
 #define LGMOT 35
 #define NBCHIFFREMAX 5 
@@ -34,7 +35,13 @@ int get_int() {
 }
 
 // Instructions --------------------------------------------------------------- 
-
+//commande -----------------------------
+void traite_commande() {
+	Mot nom_commande, nom_client;
+	get_id(nom_commande);
+	get_id(nom_client);
+	printf(MSG_COMMANDE, nom_commande, nom_client);
+}
 // Charge ------------------------------
 void traite_charge() {
 	Mot nom_travailleur;
@@ -71,14 +78,14 @@ void traite_progression() {
 	Mot nom_commade, nom_specialite;
 	get_id(nom_commade);
 	get_id(nom_specialite);
-	int nbr_heure = get_int;
+	int nbr_heure = get_int();
 	printf(MSG_PROGRESSION, nom_commade, nom_specialite, nbr_heure);
 }
 
 // Tâches ------------------------------
 void traite_tache() {
 	Mot nom_commande, nom_specialite;
-	getid(nom_commande);
+	get_id(nom_commande);
 	get_id(nom_specialite);
 	int nbr_heure = get_int();
 	printf(MSG_TACHE, nom_commande, nom_specialite, nbr_heure);
@@ -117,6 +124,10 @@ int main(int argc, char* argv[]) {
 	Mot buffer;
 	while (VRAI) {
 		get_id(buffer);
+		if (strcmp(buffer, "commande") == 0) {
+			traite_commande();
+			continue;
+		}
 		if (strcmp(buffer, "charge") == 0) {
 			traite_charge();
 			continue;
