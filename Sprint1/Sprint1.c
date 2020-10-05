@@ -19,6 +19,8 @@ Booleen EchoActif = FAUX;
 #define MSG_SUPERVISION "## consultation de l’avancement des commandes\n"
 #define MSG_CHARGE "## consultation de la charge de travail de \"%s\"\n"
 #define MSG_COMMANDE "## nouvelle commande \"%s\", par client \"%s\"\n"
+#define MSG_TOUS_TRAVAILLEURS "## consultation des travailleurs competents pour chaque specialite\n"
+#define MSG_TOUS_CLIENT "## consultation des commandes effectuees par chaque client\n"
 // Lexemes -------------------------------------------------------------------- 
 #define LGMOT 35
 #define NBCHIFFREMAX 5 
@@ -58,14 +60,24 @@ void traite_supervision() {
 void traite_client() {
 	Mot nom_client;
 	get_id(nom_client);
-	printf(MSG_CLIENT, nom_client);
+	if (strcmp(nom_client, "tous") == 0) {
+		printf(MSG_TOUS_CLIENT);
+	}
+	else {
+		printf(MSG_CLIENT, nom_client);
+	}
 }
 
 // Travailleurs ------------------------
 void traite_travailleurs() {
 	Mot nom_specialite;
 	get_id(nom_specialite);
-	printf(MSG_TRAVAILLEURS, nom_specialite);
+	if (strcmp(nom_specialite, "tous") == 0) {
+		printf(MSG_TOUS_TRAVAILLEURS);
+	}
+	else {
+		printf(MSG_TRAVAILLEURS, nom_specialite);
+	}
 }
 
 // Specialités -------------------------
