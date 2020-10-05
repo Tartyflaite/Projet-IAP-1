@@ -13,6 +13,7 @@ Booleen EchoActif = FAUX;
 #define MSG_DEMARCHE "## nouveau client \"%s\"\n"
 #define MSG_TACHE "## la commande \"%s\" requiere la specialite \"%s\" (nombre d’heures \"%d\")\n"
 #define MSG_PROGRESSION "## pour la commande \"%s\", pour la specialite \"%s\" : \"%d\" heures de plus ont ete realisees\n"
+#define MSG_PASSE "## une reallocation est requise\n"
 #define MSG_SPECIALITES "## consultation des specialites\n"
 #define MSG_TRAVAILLEURS "## consultation des travailleurs competents pour la specialite \"%s\"\n"
 #define MSG_CLIENT "## consultation des commandes effectuees par \"%s\"\n"
@@ -37,6 +38,7 @@ int get_int() {
 }
 
 // Instructions --------------------------------------------------------------- 
+
 //commande -----------------------------
 void traite_commande() {
 	Mot nom_commande, nom_client;
@@ -44,6 +46,7 @@ void traite_commande() {
 	get_id(nom_client);
 	printf(MSG_COMMANDE, nom_commande, nom_client);
 }
+
 // Charge ------------------------------
 void traite_charge() {
 	Mot nom_travailleur;
@@ -94,6 +97,11 @@ void traite_progression() {
 	printf(MSG_PROGRESSION, nom_commade, nom_specialite, nbr_heure);
 }
 
+// Passe -------------------------------
+void traite_passe() {
+	printf(MSG_PASSE);
+}
+
 // Tâches ------------------------------
 void traite_tache() {
 	Mot nom_commande, nom_specialite;
@@ -109,6 +117,7 @@ void traite_demarche() {
 	get_id(nom_client);
 	printf(MSG_DEMARCHE, nom_client);
 }
+
 // Embauche ----------------------------
 void traite_embauche() {
 	Mot nom_travailleur, nom_specialite;
@@ -116,6 +125,7 @@ void traite_embauche() {
 	get_id(nom_specialite);
 	printf(MSG_EMBAUCHE, nom_travailleur, nom_specialite);
 }
+
 // developpe --------------------------- 
 void traite_developpe() {
 	Mot nom_specialite;
@@ -123,6 +133,7 @@ void traite_developpe() {
 	int cout_horaire = get_int();
 	printf(MSG_DEVELOPPE, nom_specialite, cout_horaire);
 }
+
 // interruption ------------------------ 
 void traite_interruption() {
 	printf(MSG_INTERRUPTION);
@@ -162,6 +173,10 @@ int main(int argc, char* argv[]) {
 		}
 		if (strcmp(buffer, "progression") == 0) {
 			traite_progression();
+			continue;
+		}
+		if (strcmp(buffer, "passe") == 0) {
+			traite_passe();
 			continue;
 		}
 		if (strcmp(buffer, "tache") == 0) {
