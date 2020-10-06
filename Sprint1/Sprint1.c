@@ -145,8 +145,17 @@ int main(int argc, char* argv[]) {
 		EchoActif = VRAI;
 	}
 	Mot buffer;
+	Booleen progression = FAUX;
 	while (VRAI) {
 		get_id(buffer);
+		if (progression==VRAI && strcmp(buffer, "passe") == 0) {
+			traite_passe();
+			progression = FAUX;
+			continue;
+		}
+		else {
+			progression = FAUX;
+		}
 		if (strcmp(buffer, "commande") == 0) {
 			traite_commande();
 			continue;
@@ -173,12 +182,10 @@ int main(int argc, char* argv[]) {
 		}
 		if (strcmp(buffer, "progression") == 0) {
 			traite_progression();
+			progression = VRAI;
 			continue;
 		}
-		if (strcmp(buffer, "passe") == 0) {
-			traite_passe();
-			continue;
-		}
+
 		if (strcmp(buffer, "tache") == 0) {
 			traite_tache();
 			continue;
