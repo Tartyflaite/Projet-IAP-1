@@ -1,6 +1,0 @@
-﻿  Sprint2.c
-D:\Users\Guillaume\Documents\DUT\projet IAP\Sprints\Sprint 2\Sprint2.c(97,12): warning C4018: '<' : incompatibilité signed/unsigned
-D:\Users\Guillaume\Documents\DUT\projet IAP\Sprints\Sprint 2\Sprint2.c(105,11): warning C4018: '<' : incompatibilité signed/unsigned
-D:\Users\Guillaume\Documents\DUT\projet IAP\Sprints\Sprint 2\Sprint2.c(135,11): warning C4018: '<' : incompatibilité signed/unsigned
-D:\Users\Guillaume\Documents\DUT\projet IAP\Sprints\Sprint 2\Sprint2.c(136,10): warning C4477: 'printf' : la chaîne de format '%s' nécessite un argument de type 'char *', mais l'argument variadique 1 est de type 'Specialite'
-  Sprint 2.vcxproj -> D:\Users\Guillaume\Documents\DUT\projet IAP\Sprints\Debug\Sprint 2.exe
