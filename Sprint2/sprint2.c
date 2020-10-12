@@ -102,14 +102,15 @@ void traite_client(Clients* rep_clients) {
 		}
 	}
 	else {
-		while (i < rep_clients->nb_clients)
+		while (i < rep_clients->nb_clients) {
 			if (strcmp(nom_client, rep_clients->tab_clients[i]) == 0) {
 				printf(MSG_CLIENT, nom_client);
 				printf(MSG_CLIENT_ID_COMMANDE);
 				printf("\n");
 				return;
-				i++;
 			}
+			i++;
+		}
 		printf(MSG_CLIENT_ERREUR);
 	}
 }
