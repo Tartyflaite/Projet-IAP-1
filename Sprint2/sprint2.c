@@ -14,15 +14,15 @@ Booleen EchoActif = FAUX;
 #define MSG_TACHE "## la commande \"%s\" requiere la specialite \"%s\" (nombre d’heures \"%d\")\n"
 #define MSG_PROGRESSION "## pour la commande \"%s\", pour la specialite \"%s\" : \"%d\" heures de plus ont ete realisees\n"
 #define MSG_PASSE "## une reallocation est requise\n"
-#define MSG_SPECIALITES "## liste des spécialités : "
-#define MSG_TRAVAILLEURS "## consultation des travailleurs competents pour la specialite \"%s\"\n"
-#define MSG_CLIENT "le client \"%s\" a commande :"
+#define MSG_SPECIALITES "specialites traitees: "
+#define MSG_SPECIALITES_ERREUR "spécialitée inconnue\n"
+#define MSG_TRAVAILLEURS "la spécialité \"%s\" peut être prise en charge par : "
+#define MSG_CLIENT "le client %s a commande :"
 #define MSG_CLIENT_ERREUR "client inconnu\n"
 #define MSG_CLIENT_ID_COMMANDE ""
 #define MSG_SUPERVISION "## consultation de l’avancement des commandes\n"
 #define MSG_CHARGE "## consultation de la charge de travail de \"%s\"\n"
 #define MSG_COMMANDE "## nouvelle commande \"%s\", par client \"%s\"\n"
-#define MSG_TOUS_TRAVAILLEURS "## consultation des travailleurs competents pour chaque specialite\n"
 // Lexemes -------------------------------------------------------------------- 
 #define LGMOT 35
 #define NBCHIFFREMAX 5 
@@ -89,7 +89,7 @@ void traite_supervision() {
 }
 
 // Client ------------------------------
-void traite_client(Clients* rep_clients) {
+void traite_client(const Clients* rep_clients) {
 	Mot nom_client;
 	get_id(nom_client);
 	int i = 0;
@@ -117,27 +117,55 @@ void traite_client(Clients* rep_clients) {
 
 
 // Travailleurs ------------------------
-void traite_travailleurs() {
+void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs* rep_travailleurs) {
 	Mot nom_specialite;
 	get_id(nom_specialite);
+	int i = 0;
 	if (strcmp(nom_specialite, "tous") == 0) {
-		printf(MSG_TOUS_TRAVAILLEURS);
+		while (i < rep_specialites->nb_specialites) {
+			printf(MSG_TRAVAILLEURS, rep_specialites->tab_specialites[i].nom);
+			for (int j = 0; j < rep_travailleurs->nb_travailleurs; j++) {
+				if (rep_travailleurs->tab_travailleurs[j].tags_competences[i] == VRAI) {
+					printf("%s", rep_travailleurs->tab_travailleurs[j].nom);
+					if (i != rep_specialites->nb_specialites - 1)printf(", ");
+				}
+			}
+			printf("\n");
+			i++;
+		}
 	}
 	else {
-		printf(MSG_TRAVAILLEURS, nom_specialite);
+		while (i < rep_specialites->nb_specialites) {
+			if (strcmp(nom_specialite, rep_specialites->tab_specialites[i].nom) == 0) {
+				printf(MSG_TRAVAILLEURS,nom_specialite);
+				for (int j = 0; j < rep_travailleurs->nb_travailleurs;j++) {
+					if (rep_travailleurs->tab_travailleurs[j].tags_competences[i] == VRAI) {
+						printf("%s", rep_travailleurs->tab_travailleurs[j].nom);
+						if (i != rep_specialites->nb_specialites - 1)printf(", "); // a régler
+					}
+				}
+				printf("\n");
+				return;
+			}
+			i++;
+		}
+		printf(MSG_SPECIALITES_ERREUR);
 	}
 }
 
+
 // Specialités -------------------------
-void traite_specialites(Specialites* rep_specialites) {
-	int i = 0;
+void traite_specialites( Specialites* rep_specialites) {
 	printf(MSG_SPECIALITES);
-	while (i < rep_specialites->nb_specialites) {
-		printf("%s",rep_specialites->tab_specialites[i]);
-		if (i != rep_specialites->nb_specialites - 1)printf(", ");
-		else printf("\n");
-		i++;
+	if (rep_specialites->nb_specialites == 0) {
+		printf("\n");
+		return;
 	}
+	for (int i = 0; i < rep_specialites->nb_specialites;i++) {
+		printf("%s/%d",rep_specialites->tab_specialites[i].nom, rep_specialites->tab_specialites[i].cout_horaire);
+		if (i != rep_specialites->nb_specialites - 1)printf(", ");
+	}
+	printf("\n");
 }
 
 // Progression -------------------------
@@ -170,7 +198,7 @@ void traite_demarche(Clients* rep_clients) {
 }
 
 // Embauche ----------------------------
-void traite_embauche(Travailleurs* rep_travailleurs, Specialites* rep_specialites) {
+void traite_embauche(Travailleurs* rep_travailleurs, const Specialites* rep_specialites) {
 	Mot  nom_specialite;
 	Travailleur travailleur;
 	get_id(travailleur.nom);
@@ -239,7 +267,7 @@ int main(int argc, char* argv[]) {
 			continue;
 		}
 		if (strcmp(buffer, "travailleurs") == 0) {
-			traite_travailleurs();
+			traite_travailleurs(&rep_specialites,&rep_travailleurs);
 			continue;
 		}
 		if (strcmp(buffer, "specialites") == 0) {
