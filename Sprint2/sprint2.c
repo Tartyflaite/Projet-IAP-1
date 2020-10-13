@@ -205,8 +205,19 @@ void traite_demarche(Clients* rep_clients) {
 void traite_embauche(Travailleurs* rep_travailleurs, const Specialites* rep_specialites) {
 	Mot  nom_specialite;
 	Travailleur travailleur;
+	int j = 0;
 	get_id(travailleur.nom);
 	get_id(nom_specialite);
+	for (j = 0; j < rep_travailleurs->nb_travailleurs; j++) {
+		if (strcmp(travailleur.nom, rep_travailleurs->tab_travailleurs[j].nom) == 0) {
+			for (int i = 0; i < rep_specialites->nb_specialites; i++) {
+				if (strcmp(nom_specialite, rep_specialites->tab_specialites[i].nom) == 0) {
+					rep_travailleurs->tab_travailleurs[j].tags_competences[i] = VRAI;
+					return;
+				}
+			}
+		}
+	}
 	for (int i = 0; i < rep_specialites->nb_specialites; i++) {
 		if (strcmp(nom_specialite, rep_specialites->tab_specialites[i].nom) == 0) {
 			travailleur.tags_competences[i] = VRAI;
