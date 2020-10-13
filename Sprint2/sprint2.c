@@ -11,16 +11,16 @@ Booleen EchoActif = FAUX;
 #define MSG_INTERRUPTION "## fin de programme\n" 
 #define MSG_EMBAUCHE "## nouveau travailleur \"%s\" competent pour la specialite \"%s\"\n"
 #define MSG_DEMARCHE "## nouveau client \"%s\"\n"
-#define MSG_TACHE "## la commande \"%s\" requiere la specialite \"%s\" (nombre d’heures \"%d\")\n"
+#define MSG_TACHE "## la commande \"%s\" requiere la specialite \"%s\" (nombre d'heures \"%d\")\n"
 #define MSG_PROGRESSION "## pour la commande \"%s\", pour la specialite \"%s\" : \"%d\" heures de plus ont ete realisees\n"
 #define MSG_PASSE "## une reallocation est requise\n"
-#define MSG_SPECIALITES "specialites traitees: "
-#define MSG_SPECIALITES_ERREUR "spécialitée inconnue\n"
-#define MSG_TRAVAILLEURS "la spécialité \"%s\" peut être prise en charge par : "
-#define MSG_CLIENT "le client %s a commande :"
+#define MSG_SPECIALITES "specialites traitees : "
+#define MSG_SPECIALITES_ERREUR "specialitee inconnue\n"
+#define MSG_TRAVAILLEURS "la specialite %s peut etre prise en charge par : "
+#define MSG_CLIENT "le client %s a commande : "
 #define MSG_CLIENT_ERREUR "client inconnu\n"
 #define MSG_CLIENT_ID_COMMANDE ""
-#define MSG_SUPERVISION "## consultation de l’avancement des commandes\n"
+#define MSG_SUPERVISION "## consultation de l'avancement des commandes\n"
 #define MSG_CHARGE "## consultation de la charge de travail de \"%s\"\n"
 #define MSG_COMMANDE "## nouvelle commande \"%s\", par client \"%s\"\n"
 // Lexemes -------------------------------------------------------------------- 
@@ -121,16 +121,19 @@ void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs*
 	Mot nom_specialite;
 	get_id(nom_specialite);
 	int i = 0;
+	Booleen suivant = FAUX;
 	if (strcmp(nom_specialite, "tous") == 0) {
 		while (i < rep_specialites->nb_specialites) {
 			printf(MSG_TRAVAILLEURS, rep_specialites->tab_specialites[i].nom);
 			for (int j = 0; j < rep_travailleurs->nb_travailleurs; j++) {
 				if (rep_travailleurs->tab_travailleurs[j].tags_competences[i] == VRAI) {
+					if (suivant)printf(", ");
+					else suivant = VRAI;
 					printf("%s", rep_travailleurs->tab_travailleurs[j].nom);
-					if (i != rep_specialites->nb_specialites - 1)printf(", ");
 				}
 			}
 			printf("\n");
+			suivant = FAUX;
 			i++;
 		}
 	}
@@ -140,8 +143,9 @@ void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs*
 				printf(MSG_TRAVAILLEURS,nom_specialite);
 				for (int j = 0; j < rep_travailleurs->nb_travailleurs;j++) {
 					if (rep_travailleurs->tab_travailleurs[j].tags_competences[i] == VRAI) {
+						if (suivant)printf(", ");
+						else suivant = VRAI;
 						printf("%s", rep_travailleurs->tab_travailleurs[j].nom);
-						if (i != rep_specialites->nb_specialites - 1)printf(", "); // a régler
 					}
 				}
 				printf("\n");
@@ -155,7 +159,7 @@ void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs*
 
 
 // Specialités -------------------------
-void traite_specialites( Specialites* rep_specialites) {
+void traite_specialites(const Specialites* rep_specialites) {
 	printf(MSG_SPECIALITES);
 	if (rep_specialites->nb_specialites == 0) {
 		printf("\n");
@@ -203,7 +207,7 @@ void traite_embauche(Travailleurs* rep_travailleurs, const Specialites* rep_spec
 	Travailleur travailleur;
 	get_id(travailleur.nom);
 	get_id(nom_specialite);
-	for (int i = 0; i < MAX_SPECIALITES; i++) {
+	for (int i = 0; i < rep_specialites->nb_specialites; i++) {
 		if (strcmp(nom_specialite, rep_specialites->tab_specialites[i].nom) == 0) {
 			travailleur.tags_competences[i] = VRAI;
 			break;
