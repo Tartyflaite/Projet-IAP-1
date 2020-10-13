@@ -83,14 +83,23 @@ typedef struct {
 
 // Instructions --------------------------------------------------------------- 
 
-//commande -----------------------------
-void traite_commande() {
+// Commande -----------------------------
+void traite_commande(Commandes* rep_commandes,const Clients* rep_clients) {
 	Commande cmd;
-	Mot nom_commande, nom_client;
-	get_id(nom_commande);
+	Mot nom_client;
+	get_id(cmd.nom);
 	for (int i = 0; i < MAX_SPECIALITES; i++) {
-
+		cmd.taches_par_specialite[i].nb_heures_effectuees = 0;
+		cmd.taches_par_specialite[i].nb_heures_requises = 0;
 	}
+	for (int i = 0; i < rep_clients->nb_clients; i++) {
+		if (strcmp(nom_client, rep_clients->tab_clients[i]) == 0) {
+			cmd.idx_client = i;
+			break;
+		}
+	}
+	rep_commandes->tab_commandes[rep_commandes->nb_commandes] = cmd;
+	rep_commandes->nb_commandes += 1;
 }
 
 // Charge ------------------------------
@@ -190,26 +199,47 @@ void traite_specialites(const Specialites* rep_specialites) {
 }
 
 // Progression -------------------------
-void traite_progression() {
-	Mot nom_commade, nom_specialite;
-	get_id(nom_commade);
-	get_id(nom_specialite);
-	int nbr_heure = get_int();
-	printf(MSG_PROGRESSION, nom_commade, nom_specialite, nbr_heure);
-}
-
-// Passe -------------------------------
-void traite_passe() {
-	printf(MSG_PASSE);
-}
-
-// Tâches ------------------------------
-void traite_tache() {
+void traite_progression(const Specialites* rep_specialites, Commandes* rep_commandes) {
 	Mot nom_commande, nom_specialite;
 	get_id(nom_commande);
 	get_id(nom_specialite);
 	int nbr_heure = get_int();
-	printf(MSG_TACHE, nom_commande, nom_specialite, nbr_heure);
+	for (int i = 0; i < rep_commandes->nb_commandes; i++) {
+		if (strcmp(rep_commandes->tab_commandes[i].nom, nom_commande) == 0) {
+			for (int j = 0; j < rep_specialites->nb_specialites; j++) {
+				if (strcmp(rep_specialites->tab_specialites[j].nom, nom_specialite) == 0) {
+					rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure;
+					//prendre ne compte le dépassement?
+					break;
+				}
+			}
+			break;
+		}
+	}
+}
+
+// Passe -------------------------------
+void traite_passe() {
+	return;
+}
+
+// Tâches ------------------------------
+void traite_tache(const Specialites* rep_specialites,Commandes* rep_commandes) {
+	Mot nom_commande, nom_specialite;
+	get_id(nom_commande);
+	get_id(nom_specialite);
+	int nbr_heure = get_int();
+	for (int i = 0; i < rep_commandes->nb_commandes; i++) {
+		if (strcmp(rep_commandes->tab_commandes[i].nom, nom_commande) == 0) {
+			for (int j = 0; j < rep_specialites->nb_specialites; j++) {
+				if (strcmp(rep_specialites->tab_specialites[j].nom, nom_specialite) == 0) {
+					rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_requises = nbr_heure;
+					break;
+				}
+			}
+			break;
+		}
+	}
 }
 
 // Client ------------------------------
@@ -285,7 +315,7 @@ int main(int argc, char* argv[]) {
 			progression = FAUX;
 		}
 		if (strcmp(buffer, "commande") == 0) {
-			traite_commande();
+			traite_commande(&rep_commandes, &rep_clients);
 			continue;
 		}
 		if (strcmp(buffer, "charge") == 0) {
@@ -309,13 +339,13 @@ int main(int argc, char* argv[]) {
 			continue;
 		}
 		if (strcmp(buffer, "progression") == 0) {
-			traite_progression();
+			traite_progression(&rep_specialites, &rep_commandes);
 			progression = VRAI;
 			continue;
 		}
 
 		if (strcmp(buffer, "tache") == 0) {
-			traite_tache();
+			traite_tache(&rep_specialites,&rep_commandes);
 			continue;
 		}
 		if (strcmp(buffer, "demarche") == 0) {
