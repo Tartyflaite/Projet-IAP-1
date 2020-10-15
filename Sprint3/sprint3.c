@@ -19,8 +19,8 @@ Booleen EchoActif = FAUX;
 #define MSG_TRAVAILLEURS "la specialite %s peut etre prise en charge par : "
 #define MSG_CLIENT "le client %s a commande : "
 #define MSG_CLIENT_ERREUR "client inconnu\n"
-#define MSG_CLIENT_ID_COMMANDE ""
-#define MSG_SUPERVISION "## consultation de l'avancement des commandes\n"
+#define MSG_CLIENT_ID_COMMANDE "%s"
+#define MSG_SUPERVISION "etat des taches pour %s : "
 #define MSG_CHARGE "## consultation de la charge de travail de \"%s\"\n"
 #define MSG_COMMANDE "## nouvelle commande \"%s\", par client \"%s\"\n"
 // Lexemes -------------------------------------------------------------------- 
@@ -88,6 +88,7 @@ void traite_commande(Commandes* rep_commandes,const Clients* rep_clients) {
 	Commande cmd;
 	Mot nom_client;
 	get_id(cmd.nom);
+	get_id(nom_client);
 	for (int i = 0; i < MAX_SPECIALITES; i++) {
 		cmd.taches_par_specialite[i].nb_heures_effectuees = 0;
 		cmd.taches_par_specialite[i].nb_heures_requises = 0;
@@ -110,20 +111,42 @@ void traite_charge() {
 }
 
 // Supervision -------------------------
-void traite_supervision() {
-	printf(MSG_SUPERVISION);
+void traite_supervision(const Specialites* rep_specialites,const Commandes* rep_commandes) {
+	Booleen suivant = FAUX;
+	if (rep_commandes->nb_commandes > 0) {
+		for (int i = 0; i < rep_commandes->nb_commandes; i++) {
+			printf(MSG_SUPERVISION, rep_commandes->tab_commandes[i].nom);
+			for (int j = 0; j < rep_specialites->nb_specialites; j++) {
+				if (rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_requises != 0) {
+					if (suivant)printf(", ");
+					else suivant = VRAI;
+					printf("%s:%d/%d", rep_specialites->tab_specialites[j].nom, rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees, rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_requises);
+				}
+			}
+			printf("\n");
+			suivant = FAUX;
+		}
+	}
 }
 
 // Client ------------------------------
-void traite_client(const Clients* rep_clients) {
+void traite_client(const Clients* rep_clients, const Commandes* rep_commandes) {
 	Mot nom_client;
 	get_id(nom_client);
 	int i = 0;
+	Booleen suivant = FAUX;
 	if (strcmp(nom_client, "tous") == 0) {
 		while (i < rep_clients->nb_clients) {
 			printf(MSG_CLIENT, rep_clients->tab_clients[i]);
-			printf(MSG_CLIENT_ID_COMMANDE);
+			for (int j = 0; j < rep_commandes->nb_commandes; j++) {
+				if (rep_commandes->tab_commandes[j].idx_client == i) {
+					if (suivant)printf(", ");
+					else suivant = VRAI;
+					printf(MSG_CLIENT_ID_COMMANDE, rep_commandes->tab_commandes[j].nom);
+				}
+			}
 			printf("\n");
+			suivant = FAUX;
 			i++;
 		}
 	}
@@ -131,7 +154,13 @@ void traite_client(const Clients* rep_clients) {
 		while (i < rep_clients->nb_clients) {
 			if (strcmp(nom_client, rep_clients->tab_clients[i]) == 0) {
 				printf(MSG_CLIENT, nom_client);
-				printf(MSG_CLIENT_ID_COMMANDE);
+				for (int j = 0; j < rep_commandes->nb_commandes; j++) {
+					if (rep_commandes->tab_commandes[j].idx_client == i) {
+						if (suivant)printf(", ");
+						else suivant = VRAI;
+						printf(MSG_CLIENT_ID_COMMANDE, rep_commandes->tab_commandes[j].nom);
+					}
+				}
 				printf("\n");
 				return;
 			}
@@ -140,7 +169,6 @@ void traite_client(const Clients* rep_clients) {
 		printf(MSG_CLIENT_ERREUR);
 	}
 }
-
 
 // Travailleurs ------------------------
 void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs* rep_travailleurs) {
@@ -182,7 +210,6 @@ void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs*
 		printf(MSG_SPECIALITES_ERREUR);
 	}
 }
-
 
 // Specialités -------------------------
 void traite_specialites(const Specialites* rep_specialites) {
@@ -323,11 +350,11 @@ int main(int argc, char* argv[]) {
 			continue;
 		}
 		if (strcmp(buffer, "supervision") == 0) {
-			traite_supervision();
+			traite_supervision(&rep_specialites,&rep_commandes);
 			continue;
 		}
 		if (strcmp(buffer, "client") == 0) {
-			traite_client(&rep_clients);
+			traite_client(&rep_clients,&rep_commandes);
 			continue;
 		}
 		if (strcmp(buffer, "travailleurs") == 0) {
