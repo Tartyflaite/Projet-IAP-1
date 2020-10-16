@@ -236,7 +236,9 @@ void traite_progression(const Specialites* rep_specialites, Commandes* rep_comma
 			for (int j = 0; j < rep_specialites->nb_specialites; j++) {
 				if (strcmp(rep_specialites->tab_specialites[j].nom, nom_specialite) == 0) {
 					rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure;
-					//prendre ne compte le dépassement?
+					if (rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees > rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_requises){
+						rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees=rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
+					}
 					break;
 				}
 			}
