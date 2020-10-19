@@ -24,6 +24,8 @@ Booleen EchoActif = FAUX;
 #define MSG_CHARGE "charge de travail pour %s : "
 #define MSG_COMMANDE "## nouvelle commande \"%s\", par client \"%s\"\n"
 #define MSG_CHARGE_TACHE "%s/%s/%dheure(s)"
+#define MSG_FACTURATION ""
+
 // Lexemes -------------------------------------------------------------------- 
 #define LGMOT 35
 #define NBCHIFFREMAX 5 
@@ -78,6 +80,7 @@ typedef struct {
 	unsigned int idx_client;
 	Tache taches_par_specialite[MAX_SPECIALITES]; // nb_heures_requises==0 <=> pas de tache pour cette specialite
 	int idx_trav_tache[MAX_SPECIALITES];
+	long facture;
 } Commande;
 typedef struct {
 	Commande tab_commandes[MAX_COMMANDES];
@@ -85,19 +88,21 @@ typedef struct {
 } Commandes;
 
 // déclaration des fonctions --------------------------------------------------
-void traite_developpe(Specialites* rep_specialites);
-void traite_embauche(Travailleurs* rep_travailleurs, const Specialites* rep_specialites);
-void traite_demarche(Clients* rep_clients);
-void traite_commande(Commandes* rep_commandes, const Clients* rep_clients);
-void traite_supervision(const Specialites* rep_specialites, const Commandes* rep_commandes);
-void traite_client(const Clients* rep_clients, const Commandes* rep_commandes);
-void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs* rep_travailleurs);
-void traite_specialites(const Specialites* rep_specialites);
-void traite_tache(const Specialites* rep_specialites, Commandes* rep_commandes, Travailleurs* rep_trav);
+void traite_developpe(Specialites* rep_spe);
+void traite_embauche(Travailleurs* rep_trav, const Specialites* rep_spe);
+void traite_demarche(Clients* rep_cli);
+void traite_commande(Commandes* rep_com, const Clients* rep_cli);
+void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com);
+void traite_client(const Clients* rep_cli, const Commandes* rep_com);
+void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);
+void traite_specialites(const Specialites* rep_spe);
+void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav);
 void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav);
 void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe);
 void traite_passe();
 void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_com, Travailleurs* rep_trav);
+void traite_facturation(int indx_com,const Specialites* rep_spe, const Commandes* rep_com);
+void traite_fin(const Commandes* rep_com, const Clients* rep_cli);
 void traite_interruption();
 
 
@@ -186,82 +191,81 @@ int main(int argc, char* argv[]) {
 // Instructions --------------------------------------------------------------- 
 
 // developpe --------------------------- 
-void traite_developpe(Specialites* rep_specialites) {
+void traite_developpe(Specialites* rep_spe) {
 	Specialite spe;
 	get_id(spe.nom);
 	spe.cout_horaire = get_int();
-	rep_specialites->tab_specialites[rep_specialites->nb_specialites] = spe;
-	rep_specialites->nb_specialites += 1;
+	rep_spe->tab_specialites[rep_spe->nb_specialites] = spe;
+	rep_spe->nb_specialites += 1;
 }
 
 // Embauche ----------------------------
-void traite_embauche(Travailleurs* rep_travailleurs, const Specialites* rep_specialites) {
+void traite_embauche(Travailleurs* rep_trav, const Specialites* rep_spe) {
 	Mot  nom_specialite;
 	Travailleur travailleur;
 	int j = 0;
 	get_id(travailleur.nom);
 	get_id(nom_specialite);
-	for (j = 0; j < rep_travailleurs->nb_travailleurs; j++) {
-		if (strcmp(travailleur.nom, rep_travailleurs->tab_travailleurs[j].nom) == 0) {
-			for (int i = 0; i < rep_specialites->nb_specialites; i++) {
-				if (strcmp(nom_specialite, rep_specialites->tab_specialites[i].nom) == 0) {
-					rep_travailleurs->tab_travailleurs[j].tags_competences[i] = VRAI;
+	for (j = 0; j < rep_trav->nb_travailleurs; j++) {
+		if (strcmp(travailleur.nom, rep_trav->tab_travailleurs[j].nom) == 0) {
+			for (int i = 0; i < rep_spe->nb_specialites; i++) {
+				if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) {
+					rep_trav->tab_travailleurs[j].tags_competences[i] = VRAI;
 					return;
 				}
 			}
 		}
 	}
-	for (int i = 0; i < rep_specialites->nb_specialites; i++) {
-		if (strcmp(nom_specialite, rep_specialites->tab_specialites[i].nom) == 0) {
+	for (int i = 0; i < rep_spe->nb_specialites; i++) {
+		if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) {
 			travailleur.tags_competences[i] = VRAI;
 			break;
 		}
 	}
 	travailleur.nb_heures_travail = 0;
-	rep_travailleurs->tab_travailleurs[rep_travailleurs->nb_travailleurs] = travailleur;
-	rep_travailleurs->nb_travailleurs += 1;
+	rep_trav->tab_travailleurs[rep_trav->nb_travailleurs] = travailleur;
+	rep_trav->nb_travailleurs += 1;
 }
 
 // Demarche ------------------------------
-void traite_demarche(Clients* rep_clients) {
-	get_id(rep_clients->tab_clients[rep_clients->nb_clients]);
-	rep_clients->nb_clients += 1;
+void traite_demarche(Clients* rep_cli) {
+	get_id(rep_cli->tab_clients[rep_cli->nb_clients]);
+	rep_cli->nb_clients += 1;
 }
 
 // Commande -----------------------------
-void traite_commande(Commandes* rep_commandes, const Clients* rep_clients) {
+void traite_commande(Commandes* rep_com, const Clients* rep_cli) {
 	Commande cmd;
 	Mot nom_client;
 	get_id(cmd.nom);
 	get_id(nom_client);
+	cmd.facture = -1;
 	for (int i = 0; i < MAX_SPECIALITES; i++) {
 		cmd.taches_par_specialite[i].nb_heures_effectuees = 0;
 		cmd.taches_par_specialite[i].nb_heures_requises = 0;
 		cmd.idx_trav_tache[i] = -1;
 	}
-	for (int i = 0; i < rep_clients->nb_clients; i++) {
-		if (strcmp(nom_client, rep_clients->tab_clients[i]) == 0) {
+	for (int i = 0; i < rep_cli->nb_clients; i++) {
+		if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) {
 			cmd.idx_client = i;
 			break;
 		}
 	}
-	rep_commandes->tab_commandes[rep_commandes->nb_commandes] = cmd;
-	rep_commandes->nb_commandes += 1;
+	rep_com->tab_commandes[rep_com->nb_commandes] = cmd;
+	rep_com->nb_commandes += 1;
 }
 
-
-
 // Supervision -------------------------
-void traite_supervision(const Specialites* rep_specialites, const Commandes* rep_commandes) {
+void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com) {
 	Booleen suivant = FAUX;
-	if (rep_commandes->nb_commandes > 0) {
-		for (int i = 0; i < rep_commandes->nb_commandes; i++) {
-			printf(MSG_SUPERVISION, rep_commandes->tab_commandes[i].nom);
-			for (int j = 0; j < rep_specialites->nb_specialites; j++) {
-				if (rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_requises != 0) {
+	if (rep_com->nb_commandes > 0) {
+		for (int i = 0; i < rep_com->nb_commandes; i++) {
+			printf(MSG_SUPERVISION, rep_com->tab_commandes[i].nom);
+			for (int j = 0; j < rep_spe->nb_specialites; j++) {
+				if (rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises != 0) {
 					if (suivant)printf(", ");
 					else suivant = VRAI;
-					printf("%s:%d/%d", rep_specialites->tab_specialites[j].nom, rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees, rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_requises);
+					printf("%s:%d/%d", rep_spe->tab_specialites[j].nom, rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees, rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises);
 				}
 			}
 			printf("\n");
@@ -271,19 +275,19 @@ void traite_supervision(const Specialites* rep_specialites, const Commandes* rep
 }
 
 // Client ------------------------------
-void traite_client(const Clients* rep_clients, const Commandes* rep_commandes) {
+void traite_client(const Clients* rep_cli, const Commandes* rep_com) {
 	Mot nom_client;
 	get_id(nom_client);
 	int i = 0;
 	Booleen suivant = FAUX;
 	if (strcmp(nom_client, "tous") == 0) {
-		while (i < rep_clients->nb_clients) {
-			printf(MSG_CLIENT, rep_clients->tab_clients[i]);
-			for (int j = 0; j < rep_commandes->nb_commandes; j++) {
-				if (rep_commandes->tab_commandes[j].idx_client == i) {
+		while (i < rep_cli->nb_clients) {
+			printf(MSG_CLIENT, rep_cli->tab_clients[i]);
+			for (int j = 0; j < rep_com->nb_commandes; j++) {
+				if (rep_com->tab_commandes[j].idx_client == i) {
 					if (suivant)printf(", ");
 					else suivant = VRAI;
-					printf(MSG_CLIENT_ID_COMMANDE, rep_commandes->tab_commandes[j].nom);
+					printf(MSG_CLIENT_ID_COMMANDE, rep_com->tab_commandes[j].nom);
 				}
 			}
 			printf("\n");
@@ -292,14 +296,14 @@ void traite_client(const Clients* rep_clients, const Commandes* rep_commandes) {
 		}
 	}
 	else {
-		while (i < rep_clients->nb_clients) {
-			if (strcmp(nom_client, rep_clients->tab_clients[i]) == 0) {
+		while (i < rep_cli->nb_clients) {
+			if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) {
 				printf(MSG_CLIENT, nom_client);
-				for (int j = 0; j < rep_commandes->nb_commandes; j++) {
-					if (rep_commandes->tab_commandes[j].idx_client == i) {
+				for (int j = 0; j < rep_com->nb_commandes; j++) {
+					if (rep_com->tab_commandes[j].idx_client == i) {
 						if (suivant)printf(", ");
 						else suivant = VRAI;
-						printf(MSG_CLIENT_ID_COMMANDE, rep_commandes->tab_commandes[j].nom);
+						printf(MSG_CLIENT_ID_COMMANDE, rep_com->tab_commandes[j].nom);
 					}
 				}
 				printf("\n");
@@ -312,19 +316,19 @@ void traite_client(const Clients* rep_clients, const Commandes* rep_commandes) {
 }
 
 // Travailleurs ------------------------
-void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs* rep_travailleurs) {
+void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav) {
 	Mot nom_specialite;
 	get_id(nom_specialite);
 	int i = 0;
 	Booleen suivant = FAUX;
 	if (strcmp(nom_specialite, "tous") == 0) {
-		while (i < rep_specialites->nb_specialites) {
-			printf(MSG_TRAVAILLEURS, rep_specialites->tab_specialites[i].nom);
-			for (int j = 0; j < rep_travailleurs->nb_travailleurs; j++) {
-				if (rep_travailleurs->tab_travailleurs[j].tags_competences[i] == VRAI) {
+		while (i < rep_spe->nb_specialites) {
+			printf(MSG_TRAVAILLEURS, rep_spe->tab_specialites[i].nom);
+			for (int j = 0; j < rep_trav->nb_travailleurs; j++) {
+				if (rep_trav->tab_travailleurs[j].tags_competences[i] == VRAI) {
 					if (suivant)printf(", ");
 					else suivant = VRAI;
-					printf("%s", rep_travailleurs->tab_travailleurs[j].nom);
+					printf("%s", rep_trav->tab_travailleurs[j].nom);
 				}
 			}
 			printf("\n");
@@ -333,14 +337,14 @@ void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs*
 		}
 	}
 	else {
-		while (i < rep_specialites->nb_specialites) {
-			if (strcmp(nom_specialite, rep_specialites->tab_specialites[i].nom) == 0) {
+		while (i < rep_spe->nb_specialites) {
+			if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) {
 				printf(MSG_TRAVAILLEURS, nom_specialite);
-				for (int j = 0; j < rep_travailleurs->nb_travailleurs; j++) {
-					if (rep_travailleurs->tab_travailleurs[j].tags_competences[i] == VRAI) {
+				for (int j = 0; j < rep_trav->nb_travailleurs; j++) {
+					if (rep_trav->tab_travailleurs[j].tags_competences[i] == VRAI) {
 						if (suivant)printf(", ");
 						else suivant = VRAI;
-						printf("%s", rep_travailleurs->tab_travailleurs[j].nom);
+						printf("%s", rep_trav->tab_travailleurs[j].nom);
 					}
 				}
 				printf("\n");
@@ -353,31 +357,31 @@ void traite_travailleurs(const Specialites* rep_specialites, const Travailleurs*
 }
 
 // Specialités -------------------------
-void traite_specialites(const Specialites* rep_specialites) {
+void traite_specialites(const Specialites* rep_spe) {
 	printf(MSG_SPECIALITES);
-	if (rep_specialites->nb_specialites == 0) {
+	if (rep_spe->nb_specialites == 0) {
 		printf("\n");
 		return;
 	}
-	for (int i = 0; i < rep_specialites->nb_specialites; i++) {
-		printf("%s/%d", rep_specialites->tab_specialites[i].nom, rep_specialites->tab_specialites[i].cout_horaire);
-		if (i != rep_specialites->nb_specialites - 1)printf(", ");
+	for (int i = 0; i < rep_spe->nb_specialites; i++) {
+		printf("%s/%d", rep_spe->tab_specialites[i].nom, rep_spe->tab_specialites[i].cout_horaire);
+		if (i != rep_spe->nb_specialites - 1)printf(", ");
 	}
 	printf("\n");
 }
 
 // Tâches ------------------------------
-void traite_tache(const Specialites* rep_specialites, Commandes* rep_commandes, Travailleurs* rep_trav) {
+void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav) {
 	Mot nom_commande, nom_specialite;
 	get_id(nom_commande);
 	get_id(nom_specialite);
 	int nbr_heure = get_int();
-	for (int i = 0; i < rep_commandes->nb_commandes; i++) {
-		if (strcmp(rep_commandes->tab_commandes[i].nom, nom_commande) == 0) {
-			for (int j = 0; j < rep_specialites->nb_specialites; j++) {
-				if (strcmp(rep_specialites->tab_specialites[j].nom, nom_specialite) == 0) {
-					rep_commandes->tab_commandes[i].taches_par_specialite[j].nb_heures_requises = nbr_heure;
-					traite_assignation(i, j, rep_commandes, rep_trav);
+	for (int i = 0; i < rep_com->nb_commandes; i++) {
+		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0) {
+			for (int j = 0; j < rep_spe->nb_specialites; j++) {
+				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0) {
+					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises = nbr_heure;
+					traite_assignation(i, j, rep_com, rep_trav);
 					break;
 				}
 			}
@@ -402,6 +406,7 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 						rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail += rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees - rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 						rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 						rep_com->tab_commandes[i].idx_trav_tache[j] = -1;
+						traite_facturation(i, rep_spe, rep_com);
 					}
 					break;
 				}
@@ -463,6 +468,36 @@ void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_c
 	}
 	rep_com->tab_commandes[indx_com].idx_trav_tache[indx_spe] = affecter;
 	rep_trav->tab_travailleurs[affecter].nb_heures_travail += rep_com->tab_commandes[indx_com].taches_par_specialite[indx_spe].nb_heures_requises - rep_com->tab_commandes[indx_com].taches_par_specialite[indx_spe].nb_heures_effectuees;
+}
+
+// Facturation -------------------------
+void traite_facturation(int indx_com, const Specialites* rep_spe, Commandes* rep_com) {
+	long facture = 0;
+
+	for (int i = 0; i < rep_spe->nb_specialites; i++) {
+		if (rep_com->tab_commandes[indx_com].taches_par_specialite[i].nb_heures_effectuees == rep_com->tab_commandes[indx_com].taches_par_specialite[i].nb_heures_requises) {
+			facture += (rep_spe->tab_specialites[i].cout_horaire) * rep_com->tab_commandes[indx_com].taches_par_specialite[i].nb_heures_requises;
+		}
+		else {
+			return;
+		}
+	}
+	rep_com->tab_commandes[indx_com].facture = facture;
+}
+
+// Fin du programme --------------------
+void traite_fin(const Commandes* rep_com, const Clients* rep_cli) {
+	int fact = 0;
+	for (int i = 0; i < rep_com->nb_commandes; i++) {
+		if (rep_com->tab_commandes[i].facture == -1) {
+			return;
+		}
+	}
+	for (int i = 0; i < rep_cli->nb_clients; i++) {
+		for (int j = 0; j < rep_com->nb_commandes; j++) {
+
+		}
+	}
 }
 
 // interruption ------------------------ 
