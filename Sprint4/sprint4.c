@@ -446,13 +446,23 @@ void traite_passe() {
 
 // Assignation -------------------------
 void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_com, Travailleurs* rep_trav) {
+	Booleen suivant = FAUX;
+	int affecter;
 	for (int i = 0; i < rep_trav->nb_travailleurs; i++) {
 		if (rep_trav->tab_travailleurs[i].tags_competences[indx_spe] == VRAI) {
-			rep_com->tab_commandes[indx_com].idx_trav_tache[indx_spe] = i;
-			rep_trav->tab_travailleurs[i].nb_heures_travail += rep_com->tab_commandes[indx_com].taches_par_specialite[indx_spe].nb_heures_requises - rep_com->tab_commandes[indx_com].taches_par_specialite[indx_spe].nb_heures_effectuees;
-			break;
+			if (suivant) {
+				if (rep_trav->tab_travailleurs[i].nb_heures_travail < rep_trav->tab_travailleurs[affecter].nb_heures_travail) {
+					affecter = i;
+				}
+			}
+			else {
+				affecter = i;
+				suivant = VRAI;
+			}
 		}
 	}
+	rep_com->tab_commandes[indx_com].idx_trav_tache[indx_spe] =	affecter;
+	rep_trav->tab_travailleurs[affecter].nb_heures_travail += rep_com->tab_commandes[indx_com].taches_par_specialite[indx_spe].nb_heures_requises - rep_com->tab_commandes[indx_com].taches_par_specialite[indx_spe].nb_heures_effectuees;
 }
 
 // interruption ------------------------ 
