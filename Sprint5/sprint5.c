@@ -24,7 +24,8 @@ Booleen EchoActif = FAUX;
 #define MSG_CHARGE "charge de travail pour %s : "
 #define MSG_COMMANDE "## nouvelle commande \"%s\", par client \"%s\"\n"
 #define MSG_CHARGE_TACHE "%s/%s/%dheure(s)"
-#define MSG_FACTURATION ""
+#define MSG_FACTURATION "facturation %s : "
+#define MSG_FACTURATION_FINALE "facturations : "
 
 // Lexemes -------------------------------------------------------------------- 
 #define LGMOT 35
@@ -97,11 +98,11 @@ void traite_client(const Clients* rep_cli, const Commandes* rep_com);
 void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);
 void traite_specialites(const Specialites* rep_spe);
 void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav);
-void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav);
+void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli);
 void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe);
 void traite_passe();
 void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_com, Travailleurs* rep_trav);
-void traite_facturation(int indx_com,const Specialites* rep_spe, const Commandes* rep_com);
+void traite_facturation(int indx_com,const Specialites* rep_spe, const Commandes* rep_com, const Clients* rep_cli);
 void traite_fin(const Commandes* rep_com, const Clients* rep_cli);
 void traite_interruption();
 
@@ -157,7 +158,7 @@ int main(int argc, char* argv[]) {
 			continue;
 		}
 		if (strcmp(buffer, "progression") == 0) {
-			traite_progression(&rep_specialites, &rep_commandes, &rep_travailleurs);
+			traite_progression(&rep_specialites, &rep_commandes, &rep_travailleurs, &rep_clients);
 			progression = VRAI;
 			continue;
 		}
@@ -391,7 +392,7 @@ void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* 
 }
 
 // Progression -------------------------
-void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav) {
+void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli) {
 	Mot nom_commande, nom_specialite;
 	get_id(nom_commande);
 	get_id(nom_specialite);
@@ -406,7 +407,7 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 						rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail += rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees - rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 						rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 						rep_com->tab_commandes[i].idx_trav_tache[j] = -1;
-						traite_facturation(i, rep_spe, rep_com);
+						traite_facturation(i, rep_spe, rep_com,rep_cli);
 					}
 					break;
 				}
@@ -471,9 +472,9 @@ void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_c
 }
 
 // Facturation -------------------------
-void traite_facturation(int indx_com, const Specialites* rep_spe, Commandes* rep_com) {
+void traite_facturation(int indx_com, const Specialites* rep_spe, Commandes* rep_com, const Clients* rep_cli) {
 	long facture = 0;
-
+	Booleen suivant = FAUX;
 	for (int i = 0; i < rep_spe->nb_specialites; i++) {
 		if (rep_com->tab_commandes[indx_com].taches_par_specialite[i].nb_heures_effectuees == rep_com->tab_commandes[indx_com].taches_par_specialite[i].nb_heures_requises) {
 			facture += (rep_spe->tab_specialites[i].cout_horaire) * rep_com->tab_commandes[indx_com].taches_par_specialite[i].nb_heures_requises;
@@ -482,22 +483,42 @@ void traite_facturation(int indx_com, const Specialites* rep_spe, Commandes* rep
 			return;
 		}
 	}
+	printf(MSG_FACTURATION, rep_com->tab_commandes[indx_com].nom);
+	for (int i = 0; i < rep_spe->nb_specialites; i++) {
+		if (rep_com->tab_commandes[indx_com].taches_par_specialite[i].nb_heures_effectuees > 0) {
+			if (suivant)printf(", ");
+			else suivant = VRAI;
+			printf("%s:%ld", rep_spe->tab_specialites[i].nom, (rep_spe->tab_specialites[i].cout_horaire) * rep_com->tab_commandes[indx_com].taches_par_specialite[i].nb_heures_requises);
+		}
+	}
+	printf("\n");
 	rep_com->tab_commandes[indx_com].facture = facture;
+	traite_fin(rep_com, rep_cli);
 }
 
 // Fin du programme --------------------
-void traite_fin(const Commandes* rep_com, const Clients* rep_cli) {
+void traite_fin(const Commandes* rep_com,const Clients* rep_cli) {
 	int fact = 0;
+	Booleen suivant = FAUX;
 	for (int i = 0; i < rep_com->nb_commandes; i++) {
 		if (rep_com->tab_commandes[i].facture == -1) {
 			return;
 		}
 	}
+	printf(MSG_FACTURATION_FINALE);
 	for (int i = 0; i < rep_cli->nb_clients; i++) {
 		for (int j = 0; j < rep_com->nb_commandes; j++) {
-
+			if (rep_com->tab_commandes[j].idx_client == i) {
+				fact += rep_com->tab_commandes[j].facture;
+			}
 		}
+		if (suivant)printf(", ");
+		else suivant = VRAI;
+		printf("%s:%ld", rep_cli->tab_clients[i], fact);
+		fact = 0;
 	}
+	printf("\n");
+	exit(0);
 }
 
 // interruption ------------------------ 
