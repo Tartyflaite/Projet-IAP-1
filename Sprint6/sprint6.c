@@ -460,12 +460,13 @@ void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const
 
 // Passe -------------------------------
 void traite_passe(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) {
-	int indx_trav = rep_com->tab_commandes[idx_com].idx_trav_tache[idx_spe];
+	
+	int idx_trav = rep_com->tab_commandes[idx_com].idx_trav_tache[idx_spe];
 	int requis = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_requises;
 	int effectuees = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_effectuees;
 	int nb_heures = requis - effectuees;
 	if (nb_heures == 0)return;
-	rep_trav->tab_travailleurs[indx_trav].nb_heures_travail -= nb_heures;
+	rep_trav->tab_travailleurs[idx_trav].nb_heures_travail -= nb_heures;
 	rep_com->tab_commandes[idx_com].idx_trav_tache[idx_spe] = -1;
 	traite_assignation(idx_com, idx_spe, rep_com, rep_trav);
 }
@@ -473,7 +474,7 @@ void traite_passe(const int idx_com, const int idx_spe, Commandes* rep_com, Trav
 // Assignation -------------------------
 void traite_assignation(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) {
 	Booleen suivant = FAUX;
-	int affecter, requis, effectuees, diff;
+	int affecter = -1, requis, effectuees, diff;
 	for (unsigned int i = 0; i < rep_trav->nb_travailleurs; i++) {
 		if (rep_trav->tab_travailleurs[i].tags_competences[idx_spe] == VRAI) {
 			if (suivant) {
@@ -487,6 +488,7 @@ void traite_assignation(const int idx_com, const int idx_spe, Commandes* rep_com
 			}
 		}
 	}
+	assert(affecter >= 0);
 	requis = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_requises;
 	effectuees = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_effectuees;
 	diff = requis - effectuees;
