@@ -68,7 +68,7 @@ typedef struct {
 	unsigned int nb_travailleurs;
 } Travailleurs;
 // client −−−−−−−−−−−−−−−−−−−−−−−−−−
-#define MAX_CLIENTS 10
+#define MAX_CLIENTS 100
 typedef struct {
 	Mot tab_clients[MAX_CLIENTS];
 	unsigned int nb_clients;
@@ -89,6 +89,7 @@ typedef struct {
 typedef struct {
 	Commande tab_commandes[MAX_COMMANDES];
 	unsigned int nb_commandes;
+	unsigned int nb_facturations;
 } Commandes;
 
 // déclaration des fonctions --------------------------------------------------
@@ -129,6 +130,7 @@ int main(int argc, char* argv[]) {
 	rep_specialites.nb_specialites = 0;
 	rep_travailleurs.nb_travailleurs = 0;
 	rep_commandes.nb_commandes = 0;
+	rep_commandes.nb_facturations = 0;
 	while (VRAI) {
 		get_id(buffer);
 		if (progression == VRAI && strcmp(buffer, "passe") == 0) {
@@ -269,11 +271,11 @@ void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com) {
 		for (unsigned int i = 0; i < rep_com->nb_commandes; i++) {
 			printf(MSG_SUPERVISION, rep_com->tab_commandes[i].nom);
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) {
-				if (rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises != 0) {
+				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
+				effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees;
+				if (requis != effectuees) {
 					if (suivant)printf(", ");
 					else suivant = VRAI;
-					requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
-					effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees;
 					printf("%s:%d/%d", rep_spe->tab_specialites[j].nom, effectuees, requis);
 				}
 			}
@@ -523,6 +525,7 @@ void traite_facturation(int idx_com, const Specialites* rep_spe, Commandes* rep_
 	}
 	printf("\n");
 	rep_com->tab_commandes[idx_com].facture = facture;
+	rep_com->nb_facturations += 1;
 	traite_fin(rep_com, rep_cli);
 }
 
@@ -530,25 +533,22 @@ void traite_facturation(int idx_com, const Specialites* rep_spe, Commandes* rep_
 void traite_fin(const Commandes* rep_com,const Clients* rep_cli) {
 	int fact = 0;
 	Booleen suivant = FAUX;
-	for (unsigned int i = 0; i < rep_com->nb_commandes; i++) {
-		if (rep_com->tab_commandes[i].facture == -1) {
-			return;
-		}
-	}
-	printf(MSG_FACTURATION_FINALE);
-	for (unsigned int i = 0; i < rep_cli->nb_clients; i++) {
-		for (unsigned int j = 0; j < rep_com->nb_commandes; j++) {
-			if (rep_com->tab_commandes[j].idx_client == i) {
-				fact += rep_com->tab_commandes[j].facture;
+	if (rep_com->nb_commandes == rep_com->nb_facturations) {
+		printf(MSG_FACTURATION_FINALE);
+		for (unsigned int i = 0; i < rep_cli->nb_clients; i++) {
+			for (unsigned int j = 0; j < rep_com->nb_commandes; j++) {
+				if (rep_com->tab_commandes[j].idx_client == i) {
+					fact += rep_com->tab_commandes[j].facture;
+				}
 			}
+			if (suivant)printf(", ");
+			else suivant = VRAI;
+			printf("%s:%ld", rep_cli->tab_clients[i], fact);
+			fact = 0;
 		}
-		if (suivant)printf(", ");
-		else suivant = VRAI;
-		printf("%s:%ld", rep_cli->tab_clients[i], fact);
-		fact = 0;
+		printf("\n");
+		exit(0);
 	}
-	printf("\n");
-	exit(0);
 }
 
 // interruption ------------------------ 
