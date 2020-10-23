@@ -404,9 +404,10 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 	get_id(nom_specialite);
 	int nbr_heure = get_int(),diff, requis, effectuees;
 	for (unsigned int i = 0; i < rep_com->nb_commandes; i++) {
-		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0) {
+		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0 && rep_com->tab_commandes[i].facture<0) {
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) {
-				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0) {
+				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
+				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {
 					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure;
 					rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail -= nbr_heure;
 					requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
@@ -462,7 +463,6 @@ void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const
 
 // Passe -------------------------------
 void traite_passe(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) {
-	
 	int idx_trav = rep_com->tab_commandes[idx_com].idx_trav_tache[idx_spe];
 	int requis = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_requises;
 	int effectuees = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_effectuees;
@@ -503,6 +503,7 @@ void traite_facturation(int idx_com, const Specialites* rep_spe, Commandes* rep_
 	long facture = 0;
 	int requis, cout_horaire;
 	Booleen suivant = FAUX;
+	if (rep_com->tab_commandes[idx_com].facture > 0)return;
 	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) {
 		requis = rep_com->tab_commandes[idx_com].taches_par_specialite[i].nb_heures_requises;
 		if (rep_com->tab_commandes[idx_com].taches_par_specialite[i].nb_heures_effectuees == requis) {
