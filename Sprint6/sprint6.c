@@ -273,7 +273,7 @@ void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com) {
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) {
 				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 				effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees;
-				if (requis != effectuees) {
+				if (requis != 0) {
 					if (suivant)printf(", ");
 					else suivant = VRAI;
 					printf("%s:%d/%d", rep_spe->tab_specialites[j].nom, effectuees, requis);
