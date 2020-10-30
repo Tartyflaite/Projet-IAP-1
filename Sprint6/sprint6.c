@@ -117,24 +117,27 @@ void traite_interruption(); // interromp le programme avant une fin complete du 
 
 //Boucle principale ---------------------------------------------------------- 
 int main(int argc, char* argv[]) {
-	if (argc >= 2 && strcmp("echo", argv[1]) == 0) {
-		EchoActif = VRAI;
+	if (argc >= 2 && strcmp("echo", argv[1]) == 0) { // on verifie si le mot echo a ete mis en parametre du programme lors de l'execution en console
+		EchoActif = VRAI; // activation du mode debuggage
 	}
+	// declaration des variables utilisees dans le main
 	Mot buffer;
-	Booleen progression = FAUX;
-	Specialites rep_specialites;
-	Travailleurs rep_travailleurs;
-	Clients rep_clients;
-	Commandes rep_commandes;
-	int idx_spe_passe, idx_com_passe;
-	rep_clients.nb_clients = 0;
-	rep_specialites.nb_specialites = 0;
-	rep_travailleurs.nb_travailleurs = 0;
-	rep_commandes.nb_commandes = 0;
-	rep_commandes.nb_facturations = 0;
-	while (VRAI) {
-		get_id(buffer);
-		if (progression == VRAI && strcmp(buffer, "passe") == 0) {
+	Booleen progression = FAUX; // permet de verifier si la derniere valeur de "buffer" etait on non "progression"
+	Specialites rep_specialites; // repertoire des specialites
+	Travailleurs rep_travailleurs; // repertoire des travailleurs
+	Clients rep_clients; // repertoire des clients
+	Commandes rep_commandes;  // repertoire des commandes
+	
+	int idx_spe_passe, idx_com_passe; // permettent de recuperer les information sur la tache modifiee dans la fonction progression
+	rep_clients.nb_clients = 0; // on initialise le nombre de
+	rep_specialites.nb_specialites = 0; // on initialise le nombre de specialites enregistrees
+	rep_travailleurs.nb_travailleurs = 0; // on initialise le nombre de travailleurs engages
+	rep_commandes.nb_commandes = 0; // on initialise le nombre de commandes effectuees
+	rep_commandes.nb_facturations = 0; // on initialise le nombre de facturation effectues
+	
+	while (VRAI) { // boucle infinie
+		get_id(buffer); // on demande la commande a entrer a l'utilisateur
+		if (progression == VRAI && strcmp(buffer, "passe") == 0) { // on verifie 
 			traite_passe(idx_com_passe, idx_spe_passe, &rep_commandes, &rep_travailleurs);
 			progression = FAUX;
 			continue;
