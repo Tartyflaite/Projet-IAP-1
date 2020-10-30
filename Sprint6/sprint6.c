@@ -1,13 +1,14 @@
-﻿#pragma warning(disable:4996)
+﻿#pragma warning(disable:4996) // on désactive l'avertissement sur les scanf
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
-typedef enum { FAUX = 0, VRAI = 1 } Booleen;
-Booleen EchoActif = FAUX;
+typedef enum { FAUX = 0, VRAI = 1 } Booleen; // on definie le type booléen qui n'es pas inclus dans le C
+Booleen EchoActif = FAUX; // le mode de débuggage est désactivé par défaut
 
 // Messages emis par les instructions -----------------------------------------
+// on définie ci dessous les messages a afficher selon les fonctions utilisées
 #define MSG_DEVELOPPE "## nouvelle specialite \"%s\" ; cout horaire \"%d\"\n" 
 #define MSG_INTERRUPTION "## fin de programme\n" 
 #define MSG_EMBAUCHE "## nouveau travailleur \"%s\" competent pour la specialite \"%s\"\n"
@@ -29,78 +30,78 @@ Booleen EchoActif = FAUX;
 #define MSG_FACTURATION_FINALE "facturations : "
 
 // Lexemes -------------------------------------------------------------------- 
-#define LGMOT 35
-#define NBCHIFFREMAX 5 
-typedef char Mot[LGMOT + 1];
-void get_id(Mot id) {
-	scanf("%s", id);
-	if (EchoActif) printf(">>echo %s\n", id);
-	assert(strlen(id) > 1);
+#define LGMOT 35 //longueur d'un mot (35 caracteres)
+#define NBCHIFFREMAX 5  // taille d'un nombre (5 chiffres maximums)
+typedef char Mot[LGMOT + 1]; // définition du type mot
+void get_id(Mot id) { //fonction de récupréation d'un mot
+	scanf("%s", id); // l'utilisateur entre le mot souhaité qui est affecté a la variable id
+	if (EchoActif) printf(">>echo %s\n", id); // si le mode débuggage est activé on affiche le mot entre precedemment
+	assert(strlen(id) > 1); // on verifie que le mot fait plus d'un caractere
 }
-int get_int() {
-	char buffer[NBCHIFFREMAX + 1];
-	scanf("%s", buffer);
-	if (EchoActif) printf(">>echo %s\n", buffer);
-	assert(atoi(buffer) >= 0);
-	return atoi(buffer);
+int get_int() { // fonction de récupération d'un entier positif
+	char buffer[NBCHIFFREMAX + 1]; // on definie un mot de longueur de la taille maximum d'un chiffre (+ le "\0")
+	scanf("%s", buffer); // l'utilisateur entre le nombre souhaité qui est affecté a la variable buffer
+	if (EchoActif) printf(">>echo %s\n", buffer);// si le mode débuggage est activé on affiche le mot entre precedemment
+	assert(atoi(buffer) >= 0); // on vérifie que le nombre entré est positif
+	return atoi(buffer); //on renvoie le mot convertit en entier
 }
 // Donnees −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
 
 // specialites −−−−−−−−−−−−−−−−−−−−−
-#define MAX_SPECIALITES 10
-typedef struct {
-	Mot nom;
+#define MAX_SPECIALITES 10 // on definie le nombre maximum de specialites
+typedef struct {//une specialite est composee d'un nom de type mot et d'un cout horaire entier
+	Mot nom; 
 	int cout_horaire;
 } Specialite;
-typedef struct {
+typedef struct {//l'ensemble des specilites est regroupe dans une structure contenant un tableau de specilites ainsi qu'un entier contenant le nombre de specialites
 	Specialite tab_specialites[MAX_SPECIALITES];
 	unsigned int nb_specialites;
 } Specialites;
 // travailleurs −−−−−−−−−−−−−−−−−−−−
-#define MAX_TRAVAILLEURS 50
-typedef struct {
+#define MAX_TRAVAILLEURS 50 // on definie le nombre maximum de travailleurs
+typedef struct { // un travailleur possede un nom de type mot, des competences repertoriees dans un tableau de booleen et un nombres d'heures de travailles a effectues entier
 	Mot nom;
-	Booleen tags_competences[MAX_SPECIALITES];
+	Booleen tags_competences[MAX_SPECIALITES]; // VRAI ou FAUX avec VRAI indiquant que le travailleur maitrise la specialites numero n stockee a la case n du tableau de specialites
 	unsigned int nb_heures_travail;
 } Travailleur;
-typedef struct {
+typedef struct {//l'ensemble des travailleurs est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs
 	Travailleur tab_travailleurs[MAX_TRAVAILLEURS];
 	unsigned int nb_travailleurs;
 } Travailleurs;
 // client −−−−−−−−−−−−−−−−−−−−−−−−−−
-#define MAX_CLIENTS 100
-typedef struct {
+#define MAX_CLIENTS 100 // on definie le nombre maximum de clients
+typedef struct {// les clients sont repertoriés dans un tableau de mot contenant le nom de chaque client ainsi qu'un entier stockant le nombre de clients
 	Mot tab_clients[MAX_CLIENTS];
 	unsigned int nb_clients;
 } Clients;
 // commandes −−−−−−−−−−−−−−−−−−−−−−−
-#define MAX_COMMANDES 500
-typedef struct {
+#define MAX_COMMANDES 500 // on definie le nombre maximum de commandes
+typedef struct { // une tache est définie pas sont nombre d'heures requises ainsi que son nombre d'heures effectues (les deux étants des entiers naturels)
 	unsigned int nb_heures_requises;
 	unsigned int nb_heures_effectuees;
 } Tache;
-typedef struct {
+typedef struct {// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel), les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
 	Mot nom;
 	unsigned int idx_client;
-	Tache taches_par_specialite[MAX_SPECIALITES]; // nb_heures_requises==0 <=> pas de tache pour cette specialite
-	int idx_trav_tache[MAX_SPECIALITES];
+	Tache taches_par_specialite[MAX_SPECIALITES]; // nb_heures_requises==0 <=> pas de tache pour cette specialite, tache numero n est associee a la specialite n du tableau des specialites
+	int idx_trav_tache[MAX_SPECIALITES]; // pour la tache numero n est associe l'index du travailleur en charge de la tache
 	long facture;
 } Commande;
-typedef struct {
+typedef struct {//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs et qu'un entier contenant les nombre de commandes facturees
 	Commande tab_commandes[MAX_COMMANDES];
 	unsigned int nb_commandes;
 	unsigned int nb_facturations;
 } Commandes;
 
 // déclaration des fonctions --------------------------------------------------
-void traite_developpe(Specialites* rep_spe);
-void traite_embauche(Travailleurs* rep_trav, const Specialites* rep_spe);
-void traite_demarche(Clients* rep_cli);
-void traite_commande(Commandes* rep_com, const Clients* rep_cli);
-void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com);
-void traite_client(const Clients* rep_cli, const Commandes* rep_com);
-void affiche_clients(const Clients* rep_cli, const Commandes* rep_com, int i);
-void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);
+void traite_developpe(Specialites* rep_spe); // permet des renseigner une nouvelle specialite
+void traite_embauche(Travailleurs* rep_trav, const Specialites* rep_spe); // permet des renseigner un nouveau travailleur
+void traite_demarche(Clients* rep_cli); // permet de renseigner un nouveau client
+void traite_commande(Commandes* rep_com, const Clients* rep_cli);// permet de renseigner une nouvelle commande
+void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com); // affiche l'etat de toutes les taches pour toutes les commandes
+void traite_client(const Clients* rep_cli, const Commandes* rep_com);// recuper le nom du client a afficher (ou la commande "tous" pour afficher tout les clients)
+void affiche_clients(const Clients* rep_cli, const Commandes* rep_com, int i);// affiche les commandes effectues par un client
+void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);// recuper le nom du travailleur a afficher (ou la commande "tous" pour afficher tout les travailleurs)
 void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav, int i);
 void traite_specialites(const Specialites* rep_spe);
 void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav);
