@@ -102,16 +102,16 @@ void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com); /
 void traite_client(const Clients* rep_cli, const Commandes* rep_com);// recuper le nom du client a afficher (ou la commande "tous" pour afficher tout les clients)
 void affiche_clients(const Clients* rep_cli, const Commandes* rep_com, int i);// affiche les commandes effectues par un client
 void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);// recuper le nom du travailleur a afficher (ou la commande "tous" pour afficher tout les travailleurs)
-void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav, int i);
-void traite_specialites(const Specialites* rep_spe);
-void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav);
-void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli, int* idx_spe_passe, int* idx_com_passe);
-void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe);
-void traite_passe(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav);
-void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_com, Travailleurs* rep_trav);
-void traite_facturation(int indx_com,const Specialites* rep_spe, Commandes* rep_com, const Clients* rep_cli);
-void traite_fin(const Commandes* rep_com, const Clients* rep_cli);
-void traite_interruption();
+void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav, int i);// affiche les travailleurs maitrisiant la spécialité demandée
+void traite_specialites(const Specialites* rep_spe); // affiche les specilaites traitees
+void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav); //cree une nouvelle tache dans la commande demandee pour la specialite demandee, la tache est ensuite assignee a un travailleur
+void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli, int* idx_spe_passe, int* idx_com_passe); // fait progresser la tache demandee du nombre d'heure spécifiée, si laache est  complétée on enclanche la facturation
+void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe); // affiche les tache assignees au travailleur demande ainsi que lenmbre d'heure qu'il reste  a effetuer pour les tache en question
+void traite_passe(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav); // reassigne la tahe a un autre travailleur a pres un "traite_porgression" uniquement
+void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_com, Travailleurs* rep_trav); // la tache donnée en arametre est assignée a un travailleur
+void traite_facturation(int indx_com,const Specialites* rep_spe, Commandes* rep_com, const Clients* rep_cli); // verifie que toutes les tache d'une commande sont terminees et, si c'est la cas, calcule et enregistre la facture 
+void traite_fin(const Commandes* rep_com, const Clients* rep_cli); // verifie que toutes les commnades ont bien étés facturées. Si c'est le cas affiche la liste des clients ainsi que le prix a payer pour chaque client avant de terminer le programme
+void traite_interruption(); // interromp le programme avant une fin complete du fonctionnement
 
 
 
