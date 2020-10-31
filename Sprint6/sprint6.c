@@ -204,33 +204,33 @@ int main(int argc, char* argv[]) {
 
 // developpe --------------------------- 
 void traite_developpe(Specialites* rep_spe) {
-	Specialite spe;
-	get_id(spe.nom);
-	spe.cout_horaire = get_int();
-	rep_spe->tab_specialites[rep_spe->nb_specialites] = spe;
-	rep_spe->nb_specialites += 1;
+	Specialite spe; // on crée une variable de type specialite
+	get_id(spe.nom);// on recupere le nom de la specialite aupres de l'utilisateur
+	spe.cout_horaire = get_int(); // on recupere le cout horaire de la specialite aupres de l'utilisateur
+	rep_spe->tab_specialites[rep_spe->nb_specialites] = spe; // on affecte la valeur spe au premier emplacement disponible du repertoire de specialite
+	rep_spe->nb_specialites += 1; // on incremente le nombre de specialites enregistrees de 1
 }
 
 // Embauche ----------------------------
 void traite_embauche(Travailleurs* rep_trav, const Specialites* rep_spe) {
-	Mot  nom_specialite;
-	Travailleur travailleur;
-	unsigned int j = 0;
-	get_id(travailleur.nom);
-	get_id(nom_specialite);
-	for (j = 0; j < rep_trav->nb_travailleurs; j++) {
-		if (strcmp(travailleur.nom, rep_trav->tab_travailleurs[j].nom) == 0) {
-			for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) {
-				if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) {
-					rep_trav->tab_travailleurs[j].tags_competences[i] = VRAI;
-					return;
+	Mot  nom_specialite; // on cree une variable de type mot qui contriendra le nom de la specialite
+	Travailleur travailleur; // on cree une variable de type travailleur qui contiendra les information du travailleur a enregister
+	unsigned int j = 0; //on initialie le compteur pour la boucle for
+	get_id(travailleur.nom); // on recupere le nom du travailleur aupres de l'utilisateur
+	get_id(nom_specialite); // on recupere le nom de la specialite maitrisee par le futur travailleur aupres de l'utilisateur
+	for (j = 0; j < rep_trav->nb_travailleurs; j++) { // on parcourt l'ensemble des travailleurs enrigistres
+		if (strcmp(travailleur.nom, rep_trav->tab_travailleurs[j].nom) == 0) { // on verifie si le nom du travailleur a enregistrer est le meme que celui du travailleur enregistré a l'emplacement dindice j
+			for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) { // on parcourt l'ensemble de specialites enregistrees
+				if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) { // on verifie si le nom de la specialite renseignee par l'utilisateur et le meme que celui enregistré a l'emplacement dindice i
+					rep_trav->tab_travailleurs[j].tags_competences[i] = VRAI; // on passe la compétence d'indice i a VRAI pour le travailleur d'indice j
+					return; // on termine la fonction
 				}
 			}
 		}
 	}
-	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) {
-		if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) {
-			travailleur.tags_competences[i] = VRAI;
+	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) { //on parcourt l'ensemble des specialites enregistrees
+		if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) { // on verifie si le nom de la specialite renseignee par l'utilisateur et le meme que celui enregistré a l'emplacement dindice i
+			travailleur.tags_competences[i] = VRAI; // on passe la competence d'indice i a vrai 
 			break;
 		}
 	}
