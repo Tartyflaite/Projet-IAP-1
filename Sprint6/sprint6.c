@@ -230,41 +230,41 @@ void traite_embauche(Travailleurs* rep_trav, const Specialites* rep_spe) {
 	}
 	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) { //on parcourt l'ensemble des specialites enregistrees
 		if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) { // on verifie si le nom de la specialite renseignee par l'utilisateur et le meme que celui enregistré a l'emplacement dindice i
-			travailleur.tags_competences[i] = VRAI; // on passe la competence d'indice i a vrai 
-			break;
+			travailleur.tags_competences[i] = VRAI; // on passe la competence d'indice i a vrai pour le travailleur a enregistrer
+			break; // on sort de la boucle for
 		}
 	}
-	travailleur.nb_heures_travail = 0;
-	rep_trav->tab_travailleurs[rep_trav->nb_travailleurs] = travailleur;
-	rep_trav->nb_travailleurs += 1;
+	travailleur.nb_heures_travail = 0; // on initialise a 0 le nombre d'ehure de travail du travailleur
+	rep_trav->tab_travailleurs[rep_trav->nb_travailleurs] = travailleur; // on affecte la valeur travailleur au premier emplacement disponible du repertoire des travailleurs
+	rep_trav->nb_travailleurs += 1; // on incremente le nombre de travailleurs enregistrees de 1
 }
 
 // Demarche ------------------------------
 void traite_demarche(Clients* rep_cli) {
-	get_id(rep_cli->tab_clients[rep_cli->nb_clients]);
-	rep_cli->nb_clients += 1;
+	get_id(rep_cli->tab_clients[rep_cli->nb_clients]); // on recupere aupres de l'utilisateur le nom du client a enregister et on le met dans le premier emplacement disponible du repertoire des clients
+	rep_cli->nb_clients += 1; // on incremente le nombre de clients enregistrees de 1
 }
 
 // Commande -----------------------------
 void traite_commande(Commandes* rep_com, const Clients* rep_cli) {
-	Commande cmd;
-	Mot nom_client;
-	get_id(cmd.nom);
-	get_id(nom_client);
-	cmd.facture = -1;
-	for (unsigned int i = 0; i < MAX_SPECIALITES; i++) {
-		cmd.taches_par_specialite[i].nb_heures_effectuees = 0;
-		cmd.taches_par_specialite[i].nb_heures_requises = 0;
-		cmd.idx_trav_tache[i] = -1;
+	Commande cmd; // on declare une variable locale cmd de type commande
+	Mot nom_client; // on declare une variable locale nom_client de type mot qui contirendra le nom de client
+	get_id(cmd.nom); // on recupere aupres de l'utilisateur le nom de la commnde
+	get_id(nom_client); // on recupere aupres de l'utilisateur le nom du client
+	cmd.facture = -1; // on initialise la raviable facrue de cmd a -1
+	for (unsigned int i = 0; i < MAX_SPECIALITES; i++) { // on parcourt l'ensemble du tableau tache_par_specialite de cmd
+		cmd.taches_par_specialite[i].nb_heures_effectuees = 0; // on inistialise la valeur de nb_heures_effectuees a 0 pour la tache d'indice i
+		cmd.taches_par_specialite[i].nb_heures_requises = 0; // on inistialise la valeur de nb_heures_requises a 0 pour la tache d'indice i
+		cmd.idx_trav_tache[i] = -1; // on initialise ma valeur de l'index du travailleur associé a la tache i a -1 (non assignee)
 	}
-	for (unsigned int i = 0; i < rep_cli->nb_clients; i++) {
-		if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) {
-			cmd.idx_client = i;
-			break;
+	for (unsigned int i = 0; i < rep_cli->nb_clients; i++) { // on parcours l'ensemble des clients enregistres
+		if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) {// on verifie si le nom du client renseignee par l'utilisateur et le meme que celui enregistré a l'emplacement dindice i
+			cmd.idx_client = i; // on affecte la valeur i pour l'indexedu client dans la commande
+			break; // on quitte la boucle for
 		}
 	}
-	rep_com->tab_commandes[rep_com->nb_commandes] = cmd;
-	rep_com->nb_commandes += 1;
+	rep_com->tab_commandes[rep_com->nb_commandes] = cmd; // on affecte la valeur cmd au premier emplacement disponible du repertoire des commandes
+	rep_com->nb_commandes += 1;// on incremente le nombre de commandes enregistrees de 1
 }
 
 // Supervision -------------------------
