@@ -137,66 +137,66 @@ int main(int argc, char* argv[]) {
 	
 	while (VRAI) { // boucle infinie
 		get_id(buffer); // on demande la commande a entrer a l'utilisateur
-		if (progression == VRAI && strcmp(buffer, "passe") == 0) { // on verifie 
-			traite_passe(idx_com_passe, idx_spe_passe, &rep_commandes, &rep_travailleurs);
-			progression = FAUX;
-			continue;
+		if (progression == VRAI && strcmp(buffer, "passe") == 0) { // on verifie que l'utilisateur a entré "passe" et que progression vaut VRAI
+			traite_passe(idx_com_passe, idx_spe_passe, &rep_commandes, &rep_travailleurs); // on execute la fonction traite_passe
+			progression = FAUX; // on passe progression a FAUX
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		else {
-			progression = FAUX;
+			progression = FAUX;// on passe progression a la valeur FAUX
 		}
-		if (strcmp(buffer, "commande") == 0) {
-			traite_commande(&rep_commandes, &rep_clients);
-			continue;
+		if (strcmp(buffer, "commande") == 0) {// on verifie si l'utilisateur a entre "commande" dans buffer
+			traite_commande(&rep_commandes, &rep_clients); // on execute la fonction traite_commande
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "charge") == 0) {
-			traite_charge(&rep_travailleurs, &rep_commandes, &rep_specialites);
-			continue;
+		if (strcmp(buffer, "charge") == 0) {// on verifie si l'utilisateur a entre "charge" dans buffer
+			traite_charge(&rep_travailleurs, &rep_commandes, &rep_specialites); // on execute la fonction traite_charge
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "supervision") == 0) {
-			traite_supervision(&rep_specialites, &rep_commandes);
-			continue;
+		if (strcmp(buffer, "supervision") == 0) {// on verifie si l'utilisateur a entre "supervision" dans buffer
+			traite_supervision(&rep_specialites, &rep_commandes); // on execute la fonction traite_supervision
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "client") == 0) {
-			traite_client(&rep_clients, &rep_commandes);
-			continue;
+		if (strcmp(buffer, "client") == 0) {// on verifie si l'utilisateur a entre "client" dans buffer
+			traite_client(&rep_clients, &rep_commandes); // on execute la fonction traite_client
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "travailleurs") == 0) {
-			traite_travailleurs(&rep_specialites, &rep_travailleurs);
-			continue;
+		if (strcmp(buffer, "travailleurs") == 0) {// on verifie si l'utilisateur a entre "travailleurs" dans buffer
+			traite_travailleurs(&rep_specialites, &rep_travailleurs); // on execute la fonction traite_travailleurs
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "specialites") == 0) {
-			traite_specialites(&rep_specialites);
-			continue;
+		if (strcmp(buffer, "specialites") == 0) {// on verifie si l'utilisateur a entre "specialite" dans buffer
+			traite_specialites(&rep_specialites); // on execute la fonction traite_specialites
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "progression") == 0) {
-			traite_progression(&rep_specialites, &rep_commandes, &rep_travailleurs, &rep_clients,&idx_spe_passe,&idx_com_passe);
+		if (strcmp(buffer, "progression") == 0) {// on verifie si l'utilisateur a entre "progression" dans buffer
+			traite_progression(&rep_specialites, &rep_commandes, &rep_travailleurs, &rep_clients,&idx_spe_passe,&idx_com_passe); // on execute la fonction traite_proression
 			progression = VRAI;
-			continue;
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "tache") == 0) {
-			traite_tache(&rep_specialites, &rep_commandes, &rep_travailleurs);
-			continue;
+		if (strcmp(buffer, "tache") == 0) {// on verifie si l'utilisateur a entre "tache" dans buffer
+			traite_tache(&rep_specialites, &rep_commandes, &rep_travailleurs); // on execute la fonction traite_tache
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "demarche") == 0) {
-			traite_demarche(&rep_clients);
-			continue;
+		if (strcmp(buffer, "demarche") == 0) {// on verifie si l'utilisateur a entre "demarche" dans buffer
+			traite_demarche(&rep_clients); // on execute la fonction traite_demarche
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "embauche") == 0) {
-			traite_embauche(&rep_travailleurs, &rep_specialites);
-			continue;
+		if (strcmp(buffer, "embauche") == 0) {// on verifie si l'utilisateur a entre "embauche" dans buffer
+			traite_embauche(&rep_travailleurs, &rep_specialites); // on execute la fonction traite_embauche
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "developpe") == 0) {
-			traite_developpe(&rep_specialites);
-			continue;
+		if (strcmp(buffer, "developpe") == 0) {// on verifie si l'utilisateur a entre "developpe" dans buffer
+			traite_developpe(&rep_specialites); // on execute la fonction traite_developpe
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "interruption") == 0) {
-			traite_interruption();
-			break;
+		if (strcmp(buffer, "interruption") == 0) {// on verifie si l'utilisateur a entre "interruption" dans buffer
+			traite_interruption(); // on execute la fonction traite_interruption
+			break; // on quitte la boucle while
 		}
-		printf("!!! instruction inconnue >%s< !!!\n", buffer);
+		printf("!!! instruction inconnue >%s< !!!\n", buffer); // si aucune commande n'as ete reconnue on affiche ce message
 	}
-	return 0;
+	return 0;// en cas de sortie de la boucle infinie on met fin au programme
 }
 
 
