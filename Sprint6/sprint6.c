@@ -563,4 +563,4 @@ void traite_fin(const Commandes* rep_com,const Clients* rep_cli) {
 // interruption ------------------------ 
 void traite_interruption() {
 	printf(MSG_INTERRUPTION); // affichage du message MSG_INTERRUPTION
-}// fin dde traite_interrupton
+}// fin de traite_interrupton

@@ -94,6 +94,7 @@ void traite_supervision() {
 void affiche_clients(const Clients* rep_cli, int i){
 	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
 	printf(MSG_CLIENT, rep_cli->tab_clients[i]); // affichage de MSG_CLIENT avec comme arguement le nom du client d'index i
+	printf(MSG_CLIENT_ID_COMMANDE); //affichage de MSG_CLIENT_ID_COMMANDE
 	printf("\n"); //retour a la ligne
 	return; // interruption de la fonction
 }
