@@ -274,12 +274,12 @@ void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com) {
 	if (rep_com->nb_commandes > 0) { // on verifie si le nombre de commandes enregistrees est non nul
 		for (unsigned int i = 0; i < rep_com->nb_commandes; i++) { // on parcours l'ensemble des commandes
 			printf(MSG_SUPERVISION, rep_com->tab_commandes[i].nom); // affichage du message de supervision avec le nom de la commande d'indice i en argument
-			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // parcours de l'ensemble des specialitees
+			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // parcours de l'ensemble des specialites
 				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises; // on affecte a requis le nombre d'heures requises pour la tache j pour la commande i
 				effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees; // on affecte a effectuees le nombre d'heures effecuees pour la tache j pour la commande i
 				if (requis != 0) { // on verifie si requis est non nul
 					if (suivant)printf(", "); // si suivant vaut VRAI, affichage de ", "
-					else suivant = VRAI; // sinon aucun affichge et assage de suivant a VRAI
+					else suivant = VRAI; // sinon aucun affichge et passage de suivant a VRAI
 					printf("%s:%d/%d", rep_spe->tab_specialites[j].nom, effectuees, requis); // affichage du message sous la forme "nom specialite:nombre d'heure effectuees/nombre d'heures requises"
 				}
 			}
@@ -359,7 +359,7 @@ void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_tr
 	for (unsigned int j = 0; j < rep_trav->nb_travailleurs; j++) { // pracours de l'ensemble des travailleurs
 		if (rep_trav->tab_travailleurs[j].tags_competences[i] == VRAI) {  // on verifie si le travailleurs d'indice j maitrise la competence d'indice i
 			if (suivant)printf(", "); // si suivant vaut VRAI, affichage de ", "
-			else suivant = VRAI; // sinon aucun affichge et assage de suivant a VRAI
+			else suivant = VRAI; // sinon aucun affichge et passage de suivant a VRAI
 			printf("%s", rep_trav->tab_travailleurs[j].nom); // affichage du nom du travailleur d'indice j
 		}
 	}
@@ -439,46 +439,46 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 
 // Charge ------------------------------
 void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe) {
-	Mot nom_travailleur;
-	get_id(nom_travailleur);
+	Mot nom_travailleur; // declaration de la variable de type mot qui contiendra le nom du travailleur
+	get_id(nom_travailleur); // recuperation du nom du travailleur aupres de l'utilisateur
 	int requis, effectuees, diff; // decaration de 3 variables de simlification de lecture
-	Booleen suivant = FAUX;
-	if (rep_trav->nb_travailleurs == 0)return;
-	for (unsigned int i = 0; i < rep_trav->nb_travailleurs; i++) {
-		if (strcmp(nom_travailleur, rep_trav->tab_travailleurs[i].nom) == 0) {
-			printf(MSG_CHARGE, nom_travailleur);
-			if (rep_com->nb_commandes == 0) {
-				printf("\n");
+	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
+	if (rep_trav->nb_travailleurs == 0)return; // si il n'y a aucun travailleur enregistré la fonction d'interrompt
+	for (unsigned int i = 0; i < rep_trav->nb_travailleurs; i++) { // parcours de l'ensemble des travailleurs
+		if (strcmp(nom_travailleur, rep_trav->tab_travailleurs[i].nom) == 0) {// on verifie si le nom du travailleur a enregistrer est le meme que celui du travailleur enregistré a l'emplacement dindice i
+			printf(MSG_CHARGE, nom_travailleur); // affichage du message MSG_CHARGE avec nom_travailleur en argument
+			if (rep_com->nb_commandes == 0) { // si il n'y a aucune commande enregistree on applique un retour a la ligne et la fonction s'interrompt
+				printf("\n"); 
 				return;
 			}
-			for (unsigned int j = 0; j < rep_com->nb_commandes; j++) {
-				for (unsigned int k = 0; k < rep_spe->nb_specialites; k++) {
-					if (rep_com->tab_commandes[j].idx_trav_tache[k] == i) {
-						if (suivant)printf(", ");
-						else suivant = VRAI;
-						requis = rep_com->tab_commandes[j].taches_par_specialite[k].nb_heures_requises;
-						effectuees = rep_com->tab_commandes[j].taches_par_specialite[k].nb_heures_effectuees;
-						diff = requis - effectuees;
-						printf(MSG_CHARGE_TACHE, rep_com->tab_commandes[j].nom, rep_spe->tab_specialites[k].nom, diff);
+			for (unsigned int j = 0; j < rep_com->nb_commandes; j++) { // parcours de l'ensemble des commandes enregistrees
+				for (unsigned int k = 0; k < rep_spe->nb_specialites; k++) { // parcours de l'ensemble des specialites enregistrees
+					if (rep_com->tab_commandes[j].idx_trav_tache[k] == i) { // on verifie si le travailleur i est en charge de la tache d'indice k de la commande d'indice j
+						if (suivant)printf(", "); // si suivant vaut VRAI, affichage de ", "
+						else suivant = VRAI; // sinon aucun affichge et passage de suivant a VRAI
+						requis = rep_com->tab_commandes[j].taches_par_specialite[k].nb_heures_requises; // on affecte a requis le nombre d'heures requises pour la tache k
+						effectuees = rep_com->tab_commandes[j].taches_par_specialite[k].nb_heures_effectuees; // on affecte a effectuees la nombre d'heures effectuees pour la tache k
+						diff = requis - effectuees; // on affecte a diff la diffecrence entre requis et effectuees
+						printf(MSG_CHARGE_TACHE, rep_com->tab_commandes[j].nom, rep_spe->tab_specialites[k].nom, diff); // on affiche le message MSG_CHARGE_TACHE vec comme parametres le nom de la commande, le nom de la specialite et le nb d'heures a effectuer
 					}
 				}
 			}
-			printf("\n");
-			suivant = FAUX;
+			printf("\n"); // retour a la ligne
+			suivant = FAUX; // passage de suivant a FAUX
 		}
 	}
 }
 
 // Passe -------------------------------
-void traite_passe(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) {
-	int idx_trav = rep_com->tab_commandes[idx_com].idx_trav_tache[idx_spe];
-	int requis = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_requises;
-	int effectuees = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_effectuees;
-	int nb_heures = requis - effectuees;
-	if (nb_heures == 0)return;
-	rep_trav->tab_travailleurs[idx_trav].nb_heures_travail -= nb_heures;
-	rep_com->tab_commandes[idx_com].idx_trav_tache[idx_spe] = -1;
-	traite_assignation(idx_com, idx_spe, rep_com, rep_trav);
+void traite_passe(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) { //reassigne la tache d'indice ids_spe pour la commande d'indice idx_com
+	int idx_trav = rep_com->tab_commandes[idx_com].idx_trav_tache[idx_spe]; // idx_trav est initialisée a la valeur de l'indice du travailleur en charge de la tache d'indice idx_spe pour la commande d'indice idx_com
+	int requis = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_requises;// variable de simplifiacattion d'ecriture (nb d'heures requise pour la tache a reassigner)
+	int effectuees = rep_com->tab_commandes[idx_com].taches_par_specialite[idx_spe].nb_heures_effectuees; // variable de simplifiacattion d'ecriture (nb d'heures effectuees pour la tache a reassigner)
+	int nb_heures = requis - effectuees;// variable de simplifiacattion d'ecriture (nb d'heure restantes a effectuer)
+	if (nb_heures == 0)return; // si la tach est terminee la fonction s'interrompt
+	rep_trav->tab_travailleurs[idx_trav].nb_heures_travail -= nb_heures; // on deduis le nombres d'heures restantes sur la tache au nombres d'heures a effectuer pour le travailleur en charge
+	rep_com->tab_commandes[idx_com].idx_trav_tache[idx_spe] = -1; // reinitialisation de l'assignation de la tache
+	traite_assignation(idx_com, idx_spe, rep_com, rep_trav); // nouvelle assignation de la tache 
 }
 
 // Assignation -------------------------
