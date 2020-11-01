@@ -269,47 +269,47 @@ void traite_commande(Commandes* rep_com, const Clients* rep_cli) {
 
 // Supervision -------------------------
 void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com) {
-	Booleen suivant = FAUX;
-	int requis, effectuees;
-	if (rep_com->nb_commandes > 0) {
-		for (unsigned int i = 0; i < rep_com->nb_commandes; i++) {
-			printf(MSG_SUPERVISION, rep_com->tab_commandes[i].nom);
-			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) {
-				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
-				effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees;
-				if (requis != 0) {
-					if (suivant)printf(", ");
-					else suivant = VRAI;
-					printf("%s:%d/%d", rep_spe->tab_specialites[j].nom, effectuees, requis);
+	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
+	int requis, effectuees; // on declare deux entier qui correspondent aux nombres d'heures requises et effectuees pour une tache donnee pour simplefier la lisibilité
+	if (rep_com->nb_commandes > 0) { // on verifie si le nombre de commandes enregistrees est non nul
+		for (unsigned int i = 0; i < rep_com->nb_commandes; i++) { // on parcours l'ensemble des commandes
+			printf(MSG_SUPERVISION, rep_com->tab_commandes[i].nom); // affichange du message de supervision avec le nom de la commande d'indice i en argument
+			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // parcours de l'ensemble des specialitees
+				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises; // on affecte a requis le nombre d'heures requises pour la tache j pour la commande i
+				effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees; // on affecte a effectuees le nombre d'heures effecuees pour la tache j pour la commande i
+				if (requis != 0) { // on verifie si requis est non nul
+					if (suivant)printf(", "); // si suivant vaut VRAI, affichage de ", "
+					else suivant = VRAI; // sinon aucun affichge et assage de suivant a VRAI
+					printf("%s:%d/%d", rep_spe->tab_specialites[j].nom, effectuees, requis); // affichage du message sous la forme "nom specialite:nombre d'heure effectuees/nombre d'heures requises"
 				}
 			}
-			printf("\n");
-			suivant = FAUX;
+			printf("\n"); // retour a la ligne
+			suivant = FAUX; // passage de suivant a FAUX
 		}
 	}
 }
 
 // Client ------------------------------
 void traite_client(const Clients* rep_cli, const Commandes* rep_com) {
-	Mot nom_client;
-	get_id(nom_client);
-	unsigned int i = 0;
-	Booleen suivant = FAUX;
-	if (strcmp(nom_client, "tous") == 0) {
-		while (i < rep_cli->nb_clients) {
-			affiche_clients(rep_cli,rep_com, i);
-			i++;
+	Mot nom_client; // declaration de la variable de type mot qui contiendra le nom du client
+	get_id(nom_client); // recuperation du nom du client aupres de l'utilisateur
+	unsigned int i = 0; // initialisation du compteur i a 0
+	Booleen suivant = FAUX; // declaration d'un booleen local initilalise a FAUX
+	if (strcmp(nom_client, "tous") == 0) { // si tous es entré on affiche tous les clients
+		while (i < rep_cli->nb_clients) { //parcours de l'ensemble des clients
+			affiche_clients(rep_cli,rep_com, i); // affichage du client d'indice i et de ses commandes
+			i++; // incrementation de i
 		}
 	}
-	else {
-		while (i < rep_cli->nb_clients) {
-			if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) {
-				affiche_clients(rep_cli, rep_com, i);
-				return;
+	else { // sinon on affiche uniquement le client indique par l'utilisateur
+		while (i < rep_cli->nb_clients) { // parcourt de l'ensemble des clients
+			if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) { //on verifie si le clients resneigne est le meme que celui d'indice i
+				affiche_clients(rep_cli, rep_com, i); // affichage du client d'indice i et de ses commandes
+				return; // interruption de la fonction
 			}
-			i++;
+			i++; // incrementation de i
 		}
-		printf(MSG_CLIENT_ERREUR);
+		printf(MSG_CLIENT_ERREUR); // affichage d'un message d'erreur si le client renseigne n'est pas enregistre
 	}
 }
 
