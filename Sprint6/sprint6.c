@@ -273,7 +273,7 @@ void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com) {
 	int requis, effectuees; // on declare deux entier qui correspondent aux nombres d'heures requises et effectuees pour une tache donnee pour simplefier la lisibilité
 	if (rep_com->nb_commandes > 0) { // on verifie si le nombre de commandes enregistrees est non nul
 		for (unsigned int i = 0; i < rep_com->nb_commandes; i++) { // on parcours l'ensemble des commandes
-			printf(MSG_SUPERVISION, rep_com->tab_commandes[i].nom); // affichange du message de supervision avec le nom de la commande d'indice i en argument
+			printf(MSG_SUPERVISION, rep_com->tab_commandes[i].nom); // affichage du message de supervision avec le nom de la commande d'indice i en argument
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // parcours de l'ensemble des specialitees
 				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises; // on affecte a requis le nombre d'heures requises pour la tache j pour la commande i
 				effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees; // on affecte a effectuees le nombre d'heures effecuees pour la tache j pour la commande i
@@ -303,7 +303,7 @@ void traite_client(const Clients* rep_cli, const Commandes* rep_com) {
 	}
 	else { // sinon on affiche uniquement le client indique par l'utilisateur
 		while (i < rep_cli->nb_clients) { // parcourt de l'ensemble des clients
-			if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) { //on verifie si le clients resneigne est le meme que celui d'indice i
+			if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) { // on verifie si le clients resneigne est le meme que celui d'indice i
 				affiche_clients(rep_cli, rep_com, i); // affichage du client d'indice i et de ses commandes
 				return; // interruption de la fonction
 			}
@@ -315,13 +315,13 @@ void traite_client(const Clients* rep_cli, const Commandes* rep_com) {
 
 // Affichage Client --------------------
 void affiche_clients(const Clients* rep_cli, const Commandes* rep_com, int i){
-	Booleen suivant = FAUX;
-	printf(MSG_CLIENT, rep_cli->tab_clients[i]);
-	for (unsigned int j = 0; j < rep_com->nb_commandes; j++) {
-		if (rep_com->tab_commandes[j].idx_client == i) {
-			if (suivant)printf(", ");
-			else suivant = VRAI;
-			printf(MSG_CLIENT_ID_COMMANDE, rep_com->tab_commandes[j].nom);
+	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
+	printf(MSG_CLIENT, rep_cli->tab_clients[i]); // affichage de MSG_CLIENT avec comme arguement le nom du client d'indice i
+	for (unsigned int j = 0; j < rep_com->nb_commandes; j++) {// pracours de l'ensemble des commandes
+		if (rep_com->tab_commandes[j].idx_client == i) { // on verifie si l'indice du client associé a la commande j est celui du client indique en parametre
+			if (suivant)printf(", "); // si suivant vaut VRAI, affichage de ", "
+			else suivant = VRAI; // sinon aucun affichge et assage de suivant a VRAI
+			printf(MSG_CLIENT_ID_COMMANDE, rep_com->tab_commandes[j].nom); // affichage du message de commande avec le nom de la commande d'indice j en argument
 		}
 	}
 	printf("\n");
@@ -330,55 +330,55 @@ void affiche_clients(const Clients* rep_cli, const Commandes* rep_com, int i){
 
 // Travailleurs ------------------------
 void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav) {
-	Mot nom_specialite;
-	get_id(nom_specialite);
-	unsigned int i = 0;
-	Booleen suivant = FAUX;
-	if (strcmp(nom_specialite, "tous") == 0) {
-		while (i < rep_spe->nb_specialites) {
-			affiche_travailleurs(rep_spe, rep_trav, i);
-			i++;
+	Mot nom_specialite; // declaration de la variable de type mot qui contiendra le nom de la specialite
+	get_id(nom_specialite); // recuperation du nom de la specialite aupres de l'utilisateur
+	unsigned int i = 0; // initialisation du compteur i a 0
+	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
+	if (strcmp(nom_specialite, "tous") == 0) { // si tous es entré on affiche tous les travailleurs
+		while (i < rep_spe->nb_specialites) { //parcours de l'enesmble des specialites
+			affiche_travailleurs(rep_spe, rep_trav, i); // affiche les travailleurs competatents pour la specialiye d'indice i
+			i++; // incrementation de i
 		}
 	}
-	else {
-		while (i < rep_spe->nb_specialites) {
-			if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) {
-				affiche_travailleurs(rep_spe, rep_trav, i);
-				return;
+	else { // sinon on affiche uniquement le client indique par l'utilisateur
+		while (i < rep_spe->nb_specialites) { //parcours de l'enesmble des specialites
+			if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) { // on verifie si la specialite resneignee est la meme que celle d'indice i
+				affiche_travailleurs(rep_spe, rep_trav, i); // affiche les travailleurs competatents pour la specialiye d'indice i
+				return; // interruption de la fonction
 			}
-			i++;
+			i++; // incrementation de i
 		}
-		printf(MSG_SPECIALITES_ERREUR);
+		printf(MSG_SPECIALITES_ERREUR); // affichage d'un message d'erreur si la specialite renseignee n'est pas enregistree
 	}
 }
 
-// Affiche travailleurs
+// Affiche travailleurs ---------------
 void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav, int i) {
-	Booleen suivant = FAUX;
-	printf(MSG_TRAVAILLEURS, rep_spe->tab_specialites[i].nom);
-	for (unsigned int j = 0; j < rep_trav->nb_travailleurs; j++) {
-		if (rep_trav->tab_travailleurs[j].tags_competences[i] == VRAI) {
-			if (suivant)printf(", ");
-			else suivant = VRAI;
-			printf("%s", rep_trav->tab_travailleurs[j].nom);
+	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
+	printf(MSG_TRAVAILLEURS, rep_spe->tab_specialites[i].nom); // affichage de MSG_TRAVAILLEURS avec comme arguement le nom de la specialite d'indice i
+	for (unsigned int j = 0; j < rep_trav->nb_travailleurs; j++) { // pracours de l'ensemble des travailleurs
+		if (rep_trav->tab_travailleurs[j].tags_competences[i] == VRAI) {  // on verifie si le travailleurs d'indice j maitrise la competence d'indice i
+			if (suivant)printf(", "); // si suivant vaut VRAI, affichage de ", "
+			else suivant = VRAI; // sinon aucun affichge et assage de suivant a VRAI
+			printf("%s", rep_trav->tab_travailleurs[j].nom); // affichage du nom du travailleur d'indice j
 		}
 	}
-	printf("\n");
-	return;
+	printf("\n"); // retour a la ligne
+	return; // fin de la focntion
 }
 
 // Specialités -------------------------
 void traite_specialites(const Specialites* rep_spe) {
-	printf(MSG_SPECIALITES);
-	if (rep_spe->nb_specialites == 0) {
-		printf("\n");
-		return;
+	printf(MSG_SPECIALITES); // affichage de  MSG_SPECIALITE
+	if (rep_spe->nb_specialites == 0) { // on verifie si le nombre de specialites enregistrees est nul
+		printf("\n"); // retour a la ligne
+		return; // interruption de la fonction
 	}
-	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) {
-		printf("%s/%d", rep_spe->tab_specialites[i].nom, rep_spe->tab_specialites[i].cout_horaire);
-		if (i != rep_spe->nb_specialites - 1)printf(", ");
+	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) { // parcours de l'ensemble des specialites
+		printf("%s/%d", rep_spe->tab_specialites[i].nom, rep_spe->tab_specialites[i].cout_horaire); // affciahge de la specialite et de son cout horaire sous la forme "nom/cout horaire"
+		if (i != rep_spe->nb_specialites - 1)printf(", "); // si i est different de l'indice de la derniere specialite, affichage de ", "
 	}
-	printf("\n");
+	printf("\n"); // retour a la ligne
 }
 
 // Tâches ------------------------------
