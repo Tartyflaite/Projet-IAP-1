@@ -58,74 +58,74 @@ void traite_charge() {
 
 // Supervision -------------------------
 void traite_supervision() {
-	printf(MSG_SUPERVISION); // 
+	printf(MSG_SUPERVISION); // affiche le message MSG_SUPERVISION
 }
 
 // Client ------------------------------
 void traite_client() {
-	Mot nom_client;
-	get_id(nom_client);
-	if (strcmp(nom_client, "tous") == 0) {
-		printf(MSG_TOUS_CLIENT);
+	Mot nom_client; // declaration de la variable de type mot qui contiendra le nom du client
+	get_id(nom_client); // recuperation du nom du client aupres de l'utilisateur
+	if (strcmp(nom_client, "tous") == 0) { // si tous es entré on affiche tous les client
+		printf(MSG_TOUS_CLIENT); // affiche le message MSG_CLIENT_TOUS
 	}
-	else {
-		printf(MSG_CLIENT, nom_client);
+	else { // sinon on affiche uniquement le client indique par l'utilisateur
+		printf(MSG_CLIENT, nom_client);// affichage de MSG_CLIENT avec comme arguement le nom du client
 	}
 }
 
 // Travailleurs ------------------------
 void traite_travailleurs() {
-	Mot nom_specialite;
-	get_id(nom_specialite);
-	if (strcmp(nom_specialite, "tous") == 0) {
-		printf(MSG_TOUS_TRAVAILLEURS);
+	Mot nom_specialite;// declaration de la variable de type mot qui contiendra le nom de la specialite
+	get_id(nom_specialite);// recuperation du nom de la specialite aupres de l'utilisateur
+	if (strcmp(nom_specialite, "tous") == 0) {// si tous es entré on affiche tous les travailleurs
+		printf(MSG_TOUS_TRAVAILLEURS); // affichage de MSG_TOUS_TRAVAILLEURS
 	}
-	else {
-		printf(MSG_TRAVAILLEURS, nom_specialite);
+	else { // sinon on affiche uniquement le client indique par l'utilisateur
+		printf(MSG_TRAVAILLEURS, nom_specialite);// affichage de MSG_TRAVAILLEURS avec comme arguement le nom de la specialite
 	}
 }
 
 // Specialités -------------------------
 void traite_specialites() {
-	printf(MSG_SPECIALITES);
+	printf(MSG_SPECIALITES); // affichage de MSG_SPECIALITES
 }
 
 // Progression -------------------------
 void traite_progression() {
-	Mot nom_commade, nom_specialite;
-	get_id(nom_commade);
-	get_id(nom_specialite);
-	int nbr_heure = get_int();
-	printf(MSG_PROGRESSION, nom_commade, nom_specialite, nbr_heure);
+	Mot nom_commade, nom_specialite; // declaration de deux variables de type mot qui contiendront respectivene le nom de la commande et le nom de la specialite
+	get_id(nom_commade); // recuperation du nom de la commande aupres de l'utilisateur
+	get_id(nom_specialite); // recuperation du nom de la specialite aupres de l'utilisateur
+	int nbr_heure = get_int(); // declaration d'une variable de type int et recuperation aupres de l'utilisateur du nombred'heure de la tache a effectuer
+	printf(MSG_PROGRESSION, nom_commade, nom_specialite, nbr_heure); // affichage de MSG_PROGRESSION avec nom de la commande et de la specialite ainsi que le nombre d'heure
 }
 
 // Passe -------------------------------
 void traite_passe() {
-	printf(MSG_PASSE);
+	printf(MSG_PASSE); // affiche MSG_PASSE
 }
 
 // Tâches ------------------------------
 void traite_tache() {
-	Mot nom_commande, nom_specialite;
-	get_id(nom_commande);
-	get_id(nom_specialite);
-	int nbr_heure = get_int();
-	printf(MSG_TACHE, nom_commande, nom_specialite, nbr_heure);
+	Mot nom_commande, nom_specialite;  // declaration de deux variables de type mot qui contiendront respectivene le nom de la commande et le nom de la specialite
+	get_id(nom_commande); // recuperation du nom de la commande aupres de l'utilisateur
+	get_id(nom_specialite); // recuperation du nom de la specialite aupres de l'utilisateur
+	int nbr_heure = get_int(); // declaration d'une variable de type int et recuperation aupres de l'utilisateur du nombred'heure de la tache a effectuer
+	printf(MSG_TACHE, nom_commande, nom_specialite, nbr_heure); // affiche MSG_TACHE avec nom_commande, nom_specialite et nbr_heure en arguments
 }
 
-// Client ------------------------------
+// Demarche ------------------------------
 void traite_demarche() {
-	Mot nom_client;
-	get_id(nom_client);
-	printf(MSG_DEMARCHE, nom_client);
+	Mot nom_client; // declaration de la variable nom_client
+	get_id(nom_client); // recuperation aupres de l'utilisateur de la valeur de nom_client
+	printf(MSG_DEMARCHE, nom_client);// affichage de MSG_DEMARCHE avec comme argument nom_client
 }
 
 // Embauche ----------------------------
 void traite_embauche() {
-	Mot nom_travailleur, nom_specialite;
-	get_id(nom_travailleur);
-	get_id(nom_specialite);
-	printf(MSG_EMBAUCHE, nom_travailleur, nom_specialite);
+	Mot nom_travailleur, nom_specialite; // declaration des variables de type mot nom_travailleur et nom_specialite 
+	get_id(nom_travailleur); // recuperation aupres de l'utilisateur de nom_travailleur
+	get_id(nom_specialite); // recuperation aupres de l'utilisateur de nom_specialite
+	printf(MSG_EMBAUCHE, nom_travailleur, nom_specialite); // affichage MSG_EMBAUCHE avec en paramtre nom_travailleur et nom_specialite 
 }
 
 // developpe --------------------------- 

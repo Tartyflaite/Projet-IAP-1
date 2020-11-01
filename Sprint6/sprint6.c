@@ -213,7 +213,7 @@ void traite_developpe(Specialites* rep_spe) {
 
 // Embauche ----------------------------
 void traite_embauche(Travailleurs* rep_trav, const Specialites* rep_spe) {
-	Mot  nom_specialite; // on cree une variable de type mot qui contriendra le nom de la specialite
+	Mot nom_specialite; // on cree une variable de type mot qui contriendra le nom de la specialite
 	Travailleur travailleur; // on cree une variable de type travailleur qui contiendra les information du travailleur a enregister
 	unsigned int j = 0; //on initialie le compteur pour la boucle for
 	get_id(travailleur.nom); // on recupere le nom du travailleur aupres de l'utilisateur
@@ -383,10 +383,10 @@ void traite_specialites(const Specialites* rep_spe) {
 
 // Tâches ------------------------------
 void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav) {
-	Mot nom_commande, nom_specialite;// declaration de deux variables de type mot qui contiendront respectivene le nom de la commande et le nom de la specialite
+	Mot nom_commande, nom_specialite; // declaration de deux variables de type mot qui contiendront respectivene le nom de la commande et le nom de la specialite
 	get_id(nom_commande); // recuperation du nom de la commande aupres de l'utilisateur
 	get_id(nom_specialite); // recuperation du nom de la specialite aupres de l'utilisateur
-	int nbr_heure = get_int();// declaration d'une variable de type int et recuperation aupres de l'utilisateur du nombred'heure de la tache a effectuer
+	int nbr_heure = get_int(); // declaration d'une variable de type int et recuperation aupres de l'utilisateur du nombred'heure de la tache a effectuer
 	for (unsigned int i = 0; i < rep_com->nb_commandes; i++) { // parcours de l'ensemble des commandes 
 		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0) { // on verifie si la commande renseignee est la meme que celle d'index i
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // prcours de l'ensemble des specialites
@@ -405,8 +405,8 @@ void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* 
 void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli, int* idx_spe_passe, int* idx_com_passe) {
 	Mot nom_commande, nom_specialite; // declaration de deux variables de type mot qui contiendront respectivene le nom de la commande et le nom de la specialite
 	get_id(nom_commande); // recuperation du nom de la commande aupres de l'utilisateur
-	get_id(nom_specialite);  // recuperation du nom de la specialite aupres de l'utilisateur
-	int nbr_heure = get_int(),diff, requis, effectuees; // declaration d'une variable de type int et recuperation aupres de l'utilisateur du nombred'heure de la tache a effectuer, declaration de traois variables simplificatrices
+	get_id(nom_specialite); // recuperation du nom de la specialite aupres de l'utilisateur
+	int nbr_heure = get_int(),diff, requis, effectuees; // declaration d'une variable de type int et recuperation aupres de l'utilisateur du nombred'heure de la tache a effectuer, declaration de trois variables simplificatrices
 	for (unsigned int i = 0; i < rep_com->nb_commandes; i++) { // parcours de l'ensemble des commandes
 		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0 && rep_com->tab_commandes[i].facture<0) { // on verifie si la commande renseignee est la meme que celle d'index i et que la facture pour la commande d'index i est negative
 			
