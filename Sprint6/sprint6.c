@@ -542,18 +542,18 @@ void traite_facturation(int idx_com, const Specialites* rep_spe, Commandes* rep_
 void traite_fin(const Commandes* rep_com,const Clients* rep_cli) {
 	int fact = 0; // 
 	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
-	if (rep_com->nb_commandes == rep_com->nb_facturations) {
-		printf(MSG_FACTURATION_FINALE);
-		for (unsigned int i = 0; i < rep_cli->nb_clients; i++) {
-			for (unsigned int j = 0; j < rep_com->nb_commandes; j++) {
-				if (rep_com->tab_commandes[j].idx_client == i) {
-					fact += rep_com->tab_commandes[j].facture;
+	if (rep_com->nb_commandes == rep_com->nb_facturations) {// on verifie si toutes les fonctions ont bien ete facturees
+		printf(MSG_FACTURATION_FINALE); // affichage de MSG_FACTURATION_FINALE
+		for (unsigned int i = 0; i < rep_cli->nb_clients; i++) { // parcours de tout les clients enregistres
+			for (unsigned int j = 0; j < rep_com->nb_commandes; j++) { // parcours de toutes les commandes
+				if (rep_com->tab_commandes[j].idx_client == i) { // on verifie si le client d'index i a passe la commande d'index j
+					fact += rep_com->tab_commandes[j].facture; // ajout de la facture de la commande j a la facture totale du client i
 				}
 			}
-			if (suivant)printf(", ");
-			else suivant = VRAI;
-			printf("%s:%ld", rep_cli->tab_clients[i], fact);
-			fact = 0;
+			if (suivant)printf(", "); // si suivant vaut VRAI, affichage de ", "
+			else suivant = VRAI; // sinon aucun affichge et passage de suivant a VRAI
+			printf("%s:%ld", rep_cli->tab_clients[i], fact); // affichage de la forme "nom du client:facture totale"
+			fact = 0; // reinitialisation de la facture pour le prochain passage de boucle
 		}
 		printf("\n");// retour a la ligne
 		exit(0); // sortie du programme avec le code 0 indiquant une absence d'erreur
