@@ -31,7 +31,7 @@ Booleen EchoActif = FAUX; // le mode de débuggage est désactivé par défaut
 
 // Lexemes -------------------------------------------------------------------- 
 #define LGMOT 35 //longueur d'un mot (35 caracteres)
-#define NBCHIFFREMAX 5  // taille d'un nombre (5 chiffres maximums)
+#define NBCHIFFREMAX 5 // taille d'un nombre (5 chiffres maximums)
 typedef char Mot[LGMOT + 1]; // définition du type mot
 void get_id(Mot id) { //fonction de récupréation d'un mot
 	scanf("%s", id); // l'utilisateur entre le mot souhaité qui est affecté a la variable id

@@ -1,12 +1,14 @@
-#pragma warning(disable:4996)
+#pragma warning(disable:4996) // on désactive l'avertissement sur les scanf
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum { FAUX = 0, VRAI = 1 } Booleen;
-Booleen EchoActif = FAUX;
+typedef enum { FAUX = 0, VRAI = 1 } Booleen; // on definie le type booléen qui n'es pas inclus dans le C
+Booleen EchoActif = FAUX; // le mode de débuggage est désactivé par défaut
+
 
 // Messages emis par les instructions -----------------------------------------
+// on définie ci dessous les messages a afficher selon les fonctions utilisées
 #define MSG_DEVELOPPE "## nouvelle specialite \"%s\" ; cout horaire \"%d\"\n" 
 #define MSG_INTERRUPTION "## fin de programme\n" 
 #define MSG_EMBAUCHE "## nouveau travailleur \"%s\" competent pour la specialite \"%s\"\n"
@@ -23,40 +25,40 @@ Booleen EchoActif = FAUX;
 #define MSG_TOUS_TRAVAILLEURS "## consultation des travailleurs competents pour chaque specialite\n"
 #define MSG_TOUS_CLIENT "## consultation des commandes effectuees par chaque client\n"
 // Lexemes -------------------------------------------------------------------- 
-#define LGMOT 35
-#define NBCHIFFREMAX 5 
-typedef char Mot[LGMOT + 1];
-void get_id(Mot id) {
-	scanf("%s", id);
-	if (EchoActif) printf(">>echo %s\n", id);
+#define LGMOT 35 //longueur d'un mot (35 caracteres)
+#define NBCHIFFREMAX 5  // taille d'un nombre (5 chiffres maximums)
+typedef char Mot[LGMOT + 1]; // définition du type mot
+void get_id(Mot id) { //fonction de récupréation d'un mot
+	scanf("%s", id); // l'utilisateur entre le mot souhaité qui est affecté a la variable id
+	if (EchoActif) printf(">>echo %s\n", id); // si le mode débuggage est activé on affiche le mot entre precedemment
 }
-int get_int() {
-	char buffer[NBCHIFFREMAX + 1];
-	scanf("%s", buffer);
-	if (EchoActif) printf(">>echo %s\n", buffer);
-	return atoi(buffer);
+int get_int() { // fonction de récupération d'un entier positif
+	char buffer[NBCHIFFREMAX + 1]; // on definie un mot de longueur de la taille maximum d'un chiffre (+ le "\0")
+	scanf("%s", buffer); // l'utilisateur entre le nombre souhaité qui est affecté a la variable buffer
+	if (EchoActif) printf(">>echo %s\n", buffer);// si le mode débuggage est activé on affiche le mot entre precedemment
+	return atoi(buffer); //on renvoie le mot convertit en entier
 }
 
 // Instructions --------------------------------------------------------------- 
 
 //commande -----------------------------
 void traite_commande() {
-	Mot nom_commande, nom_client;
-	get_id(nom_commande);
-	get_id(nom_client);
-	printf(MSG_COMMANDE, nom_commande, nom_client);
+	Mot nom_commande, nom_client;// on declare deux variables de type mot 
+	get_id(nom_commande);// on recupere aupres de l'utilisateur le nom de la commnde
+	get_id(nom_client);// on recupere aupres de l'utilisateur le nom du client
+	printf(MSG_COMMANDE, nom_commande, nom_client); // affichage de MSG_COMMANDE avec nom_commande et nom_lient comma argument
 }
 
 // Charge ------------------------------
 void traite_charge() {
-	Mot nom_travailleur;
-	get_id(nom_travailleur);
-	printf(MSG_CHARGE, nom_travailleur);
+	Mot nom_travailleur;// declaration de la variable de type mot qui contiendra le nom du travailleur
+	get_id(nom_travailleur); // recuperation du nom du travailleur aupres de l'utilisateur
+	printf(MSG_CHARGE, nom_travailleur); // affichage du message MSG_CHARGE avec nom_travailleur en argument
 }
 
 // Supervision -------------------------
 void traite_supervision() {
-	printf(MSG_SUPERVISION);
+	printf(MSG_SUPERVISION); // 
 }
 
 // Client ------------------------------
