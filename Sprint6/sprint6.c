@@ -342,7 +342,7 @@ void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_tra
 	}
 	else { // sinon on affiche uniquement le client indique par l'utilisateur
 		while (i < rep_spe->nb_specialites) { //parcours de l'enesmble des specialites
-			if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) { // on verifie si la specialite resneignee est la meme que celle d'indice i
+			if (strcmp(nom_specialite, rep_spe->tab_specialites[i].nom) == 0) { // on verifie si la specialite renseignee est la meme que celle d'indice i
 				affiche_travailleurs(rep_spe, rep_trav, i); // affiche les travailleurs competatents pour la specialiye d'indice i
 				return; // interruption de la fonction
 			}
@@ -383,20 +383,20 @@ void traite_specialites(const Specialites* rep_spe) {
 
 // Tâches ------------------------------
 void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav) {
-	Mot nom_commande, nom_specialite;
-	get_id(nom_commande);
-	get_id(nom_specialite);
-	int nbr_heure = get_int();
-	for (unsigned int i = 0; i < rep_com->nb_commandes; i++) {
-		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0) {
-			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) {
-				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0) {
-					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises = nbr_heure;
-					traite_assignation(i, j, rep_com, rep_trav);
-					break;
+	Mot nom_commande, nom_specialite;// declaration de deux variables de type mot qui contiendront respectivene le nom de la commande et le nom de la specialite
+	get_id(nom_commande); // recuperation du nom de la commande aupres de l'utilisateur
+	get_id(nom_specialite); // recuperation du nom de la specialite aupres de l'utilisateur
+	int nbr_heure = get_int();// declaration d'une variable de type int et recuperation aupres de l'utilisateur du nombred'heure de la tache a effectuer
+	for (unsigned int i = 0; i < rep_com->nb_commandes; i++) { // parcours de l'ensemble des commandes 
+		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0) { // on verifie si la scommande renseignee est la meme que celle d'indice i
+			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // prcours de l'ensemble des specialites
+				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0) { // on verifie si la specialite renseignee est la meme que celle d'indice j
+					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises = nbr_heure; // assignation de la valeur nbr_heure au nombre d'heure requises pour la tache d'indice j pour la commandes d'indice i
+					traite_assignation(i, j, rep_com, rep_trav); // affectation de la tache d'indice j pour la commandes d'indice i a un travailleur
+					break; // interruption de la boucle
 				}
 			}
-			break;
+			break; // interruption de la boucle
 		}
 	}
 }
@@ -412,11 +412,14 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) {
 				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {
+
 					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure;
 					rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail -= nbr_heure;
+
 					requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 					effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees;
 					diff = requis - effectuees;
+
 					if (diff<=0) {
 						rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail += diff;
 						rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees = requis;
