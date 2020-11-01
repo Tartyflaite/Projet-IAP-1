@@ -41,7 +41,7 @@ void get_id(Mot id) { //fonction de récupréation d'un mot
 int get_int() { // fonction de récupération d'un entier positif
 	char buffer[NBCHIFFREMAX + 1]; // on definie un mot de longueur de la taille maximum d'un chiffre (+ le "\0")
 	scanf("%s", buffer); // l'utilisateur entre le nombre souhaité qui est affecté a la variable buffer
-	if (EchoActif) printf(">>echo %s\n", buffer);// si le mode débuggage est activé on affiche le mot entre precedemment
+	if (EchoActif) printf(">>echo %s\n", buffer); // si le mode débuggage est activé on affiche le mot entre precedemment
 	assert(atoi(buffer) >= 0); // on vérifie que le nombre entré est positif
 	return atoi(buffer); //on renvoie le mot convertit en entier
 }
@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 	Commandes rep_commandes;  // repertoire des commandes
 	
 	int idx_spe_passe, idx_com_passe; // permettent de recuperer les information sur la tache modifiee dans la fonction progression
-	rep_clients.nb_clients = 0; // on initialise le nombre de
+	rep_clients.nb_clients = 0; // on initialise le nombre de clients enregistres
 	rep_specialites.nb_specialites = 0; // on initialise le nombre de specialites enregistrees
 	rep_travailleurs.nb_travailleurs = 0; // on initialise le nombre de travailleurs engages
 	rep_commandes.nb_commandes = 0; // on initialise le nombre de commandes effectuees
@@ -324,8 +324,8 @@ void affiche_clients(const Clients* rep_cli, const Commandes* rep_com, int i){
 			printf(MSG_CLIENT_ID_COMMANDE, rep_com->tab_commandes[j].nom); // affichage du message de commande avec le nom de la commande d'index j en argument
 		}
 	}
-	printf("\n");
-	return;
+	printf("\n"); //retour a la ligne
+	return; // interruption de la fonction
 }
 
 // Travailleurs ------------------------
