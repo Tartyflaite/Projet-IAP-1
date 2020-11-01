@@ -143,54 +143,54 @@ int main(int argc, char* argv[]) {
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		else {
-			progression = FAUX;// on passe progression a la valeur FAUX
+			progression = FAUX; // on passe progression a la valeur FAUX
 		}
-		if (strcmp(buffer, "commande") == 0) {// on verifie si l'utilisateur a entre "commande" dans buffer
+		if (strcmp(buffer, "commande") == 0) { // on verifie si l'utilisateur a entre "commande" dans buffer
 			traite_commande(&rep_commandes, &rep_clients); // on execute la fonction traite_commande
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "charge") == 0) {// on verifie si l'utilisateur a entre "charge" dans buffer
+		if (strcmp(buffer, "charge") == 0) { // on verifie si l'utilisateur a entre "charge" dans buffer
 			traite_charge(&rep_travailleurs, &rep_commandes, &rep_specialites); // on execute la fonction traite_charge
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "supervision") == 0) {// on verifie si l'utilisateur a entre "supervision" dans buffer
+		if (strcmp(buffer, "supervision") == 0) { // on verifie si l'utilisateur a entre "supervision" dans buffer
 			traite_supervision(&rep_specialites, &rep_commandes); // on execute la fonction traite_supervision
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "client") == 0) {// on verifie si l'utilisateur a entre "client" dans buffer
+		if (strcmp(buffer, "client") == 0) { // on verifie si l'utilisateur a entre "client" dans buffer
 			traite_client(&rep_clients, &rep_commandes); // on execute la fonction traite_client
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "travailleurs") == 0) {// on verifie si l'utilisateur a entre "travailleurs" dans buffer
+		if (strcmp(buffer, "travailleurs") == 0) { // on verifie si l'utilisateur a entre "travailleurs" dans buffer
 			traite_travailleurs(&rep_specialites, &rep_travailleurs); // on execute la fonction traite_travailleurs
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "specialites") == 0) {// on verifie si l'utilisateur a entre "specialite" dans buffer
+		if (strcmp(buffer, "specialites") == 0) { // on verifie si l'utilisateur a entre "specialite" dans buffer
 			traite_specialites(&rep_specialites); // on execute la fonction traite_specialites
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "progression") == 0) {// on verifie si l'utilisateur a entre "progression" dans buffer
+		if (strcmp(buffer, "progression") == 0) { // on verifie si l'utilisateur a entre "progression" dans buffer
 			traite_progression(&rep_specialites, &rep_commandes, &rep_travailleurs, &rep_clients,&idx_spe_passe,&idx_com_passe); // on execute la fonction traite_proression
-			progression = VRAI;
+			progression = VRAI; // passage de progression a VRAI
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "tache") == 0) {// on verifie si l'utilisateur a entre "tache" dans buffer
+		if (strcmp(buffer, "tache") == 0) { // on verifie si l'utilisateur a entre "tache" dans buffer
 			traite_tache(&rep_specialites, &rep_commandes, &rep_travailleurs); // on execute la fonction traite_tache
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "demarche") == 0) {// on verifie si l'utilisateur a entre "demarche" dans buffer
+		if (strcmp(buffer, "demarche") == 0) { // on verifie si l'utilisateur a entre "demarche" dans buffer
 			traite_demarche(&rep_clients); // on execute la fonction traite_demarche
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "embauche") == 0) {// on verifie si l'utilisateur a entre "embauche" dans buffer
+		if (strcmp(buffer, "embauche") == 0) { // on verifie si l'utilisateur a entre "embauche" dans buffer
 			traite_embauche(&rep_travailleurs, &rep_specialites); // on execute la fonction traite_embauche
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "developpe") == 0) {// on verifie si l'utilisateur a entre "developpe" dans buffer
+		if (strcmp(buffer, "developpe") == 0) { // on verifie si l'utilisateur a entre "developpe" dans buffer
 			traite_developpe(&rep_specialites); // on execute la fonction traite_developpe
 			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		if (strcmp(buffer, "interruption") == 0) {// on verifie si l'utilisateur a entre "interruption" dans buffer
+		if (strcmp(buffer, "interruption") == 0) { // on verifie si l'utilisateur a entre "interruption" dans buffer
 			traite_interruption(); // on execute la fonction traite_interruption
 			break; // on quitte la boucle while
 		}

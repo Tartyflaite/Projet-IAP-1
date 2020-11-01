@@ -130,85 +130,86 @@ void traite_embauche() {
 
 // developpe --------------------------- 
 void traite_developpe() {
-	Mot nom_specialite;
-	get_id(nom_specialite);
-	int cout_horaire = get_int();
-	printf(MSG_DEVELOPPE, nom_specialite, cout_horaire);
+	Mot nom_specialite; // declaration de la variable de type mot nom_specialite
+	get_id(nom_specialite); // recuperation aupres de l'utilisateur de nom_specialite
+	int cout_horaire = get_int(); // declaration d'une variable de type int et recuperation aupres de l'utilisateur du cout horaire de la specialite
+	printf(MSG_DEVELOPPE, nom_specialite, cout_horaire); // affiche MSG_DEVELOPPE avec en parametres nom_specialite et cout_horaire
 }
 
 // interruption ------------------------ 
 void traite_interruption() {
-	printf(MSG_INTERRUPTION);
+	printf(MSG_INTERRUPTION); // affiche MSG_INTERRUPTION
 }
 
 //Boucle principale ---------------------------------------------------------- 
 int main(int argc, char* argv[]) {
-	if (argc >= 2 && strcmp("echo", argv[1]) == 0) {
-		EchoActif = VRAI;
+	if (argc >= 2 && strcmp("echo", argv[1]) == 0) { // on verifie si le mot echo a ete mis en parametre du programme lors de l'execution en console
+		EchoActif = VRAI; // activation du mode debuggage
 	}
+	// declaration des variables utilisees dans le main
 	Mot buffer;
-	Booleen progression = FAUX;
-	while (VRAI) {
-		get_id(buffer);
-		if (progression==VRAI && strcmp(buffer, "passe") == 0) {
-			traite_passe();
-			progression = FAUX;
-			continue;
+	Booleen progression = FAUX; // permet de verifier si la derniere valeur de "buffer" etait on non "progression"
+	while (VRAI) { // boucle infinie
+		get_id(buffer); // on demande la commande a entrer a l'utilisateur
+		if (progression==VRAI && strcmp(buffer, "passe") == 0) { // on verifie que l'utilisateur a entré "passe" et que progression vaut VRAI
+			traite_passe(); // on execute la fonction traite_passe
+			progression = FAUX; // on passe progression a FAUX
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		else {
-			progression = FAUX;
+			progression = FAUX; // on passe progression a la valeur FAUX
 		}
-		if (strcmp(buffer, "commande") == 0) {
-			traite_commande();
-			continue;
+		if (strcmp(buffer, "commande") == 0) { // on verifie si l'utilisateur a entre "commande" dans buffer
+			traite_commande(); // on execute la fonction traite_commande
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while	
 		}
 		if (strcmp(buffer, "charge") == 0) {
-			traite_charge();
-			continue;
+			traite_charge(); // on execute la fonction traite_charge
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "supervision") == 0) {
-			traite_supervision();
-			continue;
+			traite_supervision(); // on execute la fonction traite_supervision
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "client") == 0) {
-			traite_client();
-			continue;
+			traite_client();// on execute la fonction traite_client
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "travailleurs") == 0) {
-			traite_travailleurs();
-			continue;
+			traite_travailleurs(); // on execute la fonction traite_travailleurs
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "specialites") == 0) {
-			traite_specialites();
-			continue;
+			traite_specialites(); // on execute la fonction traite_specialites
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "progression") == 0) {
-			traite_progression();
-			progression = VRAI;
-			continue;
+			traite_progression(); // on execute la fonction traite_proression
+			progression = VRAI; // passage de progression a VRAI
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 
 		if (strcmp(buffer, "tache") == 0) {
-			traite_tache();
-			continue;
+			traite_tache(); // on execute la fonction traite_tache
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "demarche") == 0) {
-			traite_demarche();
-			continue;
+			traite_demarche(); // on execute la fonction traite_demarche
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "embauche") == 0) {
-			traite_embauche();
-			continue;
+			traite_embauche(); // on execute la fonction traite_embauche
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "developpe") == 0) {
-			traite_developpe();
-			continue;
+			traite_developpe(); // on execute la fonction traite_developpe
+			continue; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
 		if (strcmp(buffer, "interruption") == 0) {
-			traite_interruption();
-			break;
+			traite_interruption(); // on execute la fonction traite_interruption
+			break; // on saute les instructions suivante et on recommence a début de la boucle while
 		}
-		printf("!!! instruction inconnue >%s< !!!\n", buffer);
+		printf("!!! instruction inconnue >%s< !!!\n", buffer); // si aucune commande n'as ete reconnue on affiche ce message
 	}
-	return 0;
+	return 0;// en cas de sortie de la boucle infinie on met fin au programme
 }
