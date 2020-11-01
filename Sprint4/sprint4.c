@@ -353,7 +353,6 @@ void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_tr
 			else suivant = VRAI; // sinon aucun affichge et passage de suivant a VRAI
 			printf("%s", rep_trav->tab_travailleurs[j].nom); // affichage du nom du travailleur d'index j
 		}
-		printf(MSG_SPECIALITES_ERREUR);
 	}
 	printf("\n"); // retour a la ligne
 	return; // fin de la focntion
