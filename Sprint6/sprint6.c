@@ -508,40 +508,40 @@ void traite_assignation(const int idx_com, const int idx_spe, Commandes* rep_com
 
 // Facturation -------------------------
 void traite_facturation(int idx_com, const Specialites* rep_spe, Commandes* rep_com, const Clients* rep_cli) {
-	long facture = 0;
-	int requis, cout_horaire;
-	Booleen suivant = FAUX;
-	if (rep_com->tab_commandes[idx_com].facture > 0)return;
-	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) {
-		requis = rep_com->tab_commandes[idx_com].taches_par_specialite[i].nb_heures_requises;
-		if (rep_com->tab_commandes[idx_com].taches_par_specialite[i].nb_heures_effectuees == requis) {
-			cout_horaire = rep_spe->tab_specialites[i].cout_horaire;
-			facture += cout_horaire *requis;
+	long facture = 0; // declaration d'un variable facture de type long pour prendre en copte de garnds chiffres
+	int requis, cout_horaire; // declaration de deux variables de simplification: requis pour le nombres d'heure requises d'une tcahe et cout horaire pour le cout horaire d'une specialite
+	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
+	if (rep_com->tab_commandes[idx_com].facture > 0)return; // si la facture a deja ete calculee la fonction s'nterrompt
+	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) { // parcours de l'ensemble des specialites
+		requis = rep_com->tab_commandes[idx_com].taches_par_specialite[i].nb_heures_requises; // on affecte a requis le nombre d'heures requises pour la tache i
+		if (rep_com->tab_commandes[idx_com].taches_par_specialite[i].nb_heures_effectuees == requis) { // on verifie si la tache est terminee
+			cout_horaire = rep_spe->tab_specialites[i].cout_horaire; // on affecte le cout horaire de la specialite i a cout_horaire
+			facture += cout_horaire *requis; // on ajoute a la facture le cout de la tache calculé en multipliant le cout horaire pas le nombre d'heures de la tache
 		}
-		else {
+		else { // si la tache n'es pas teminee on interrompt la fonction
 			return;
 		}
 	}
-	printf(MSG_FACTURATION, rep_com->tab_commandes[idx_com].nom);
-	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) {
-		requis = rep_com->tab_commandes[idx_com].taches_par_specialite[i].nb_heures_requises;
+	printf(MSG_FACTURATION, rep_com->tab_commandes[idx_com].nom); // affichage de MSG_FACTURATION avec le nom de la commande en argument
+	for (unsigned int i = 0; i < rep_spe->nb_specialites; i++) { // parcours des specialites
+		requis = rep_com->tab_commandes[idx_com].taches_par_specialite[i].nb_heures_requises; // on affecte a requis le nombre d'heures requises pour la tache i
 		if (requis > 0) {
-			if (suivant)printf(", ");
-			else suivant = VRAI;
-			cout_horaire = rep_spe->tab_specialites[i].cout_horaire;
-			printf("%s:%ld", rep_spe->tab_specialites[i].nom, cout_horaire * requis);
+			if (suivant)printf(", "); // si suivant vaut VRAI, affichage de ", "
+			else suivant = VRAI; // sinon aucun affichge et passage de suivant a VRAI
+			cout_horaire = rep_spe->tab_specialites[i].cout_horaire; // on affecte le cout horaire de la specialite i a cout_horaire
+			printf("%s:%ld", rep_spe->tab_specialites[i].nom, cout_horaire * requis);// affichage de la forme "nom de la specialite:facturation de la tache"
 		}
 	}
-	printf("\n");
-	rep_com->tab_commandes[idx_com].facture = facture;
-	rep_com->nb_facturations += 1;
-	traite_fin(rep_com, rep_cli);
+	printf("\n"); // retour a la ligne
+	rep_com->tab_commandes[idx_com].facture = facture; // on affecte fature a la facture de la commande d'index idx_com
+	rep_com->nb_facturations += 1; // on increment le nombre de commandes facturees
+	traite_fin(rep_com, rep_cli); // execution e la commande de facturation finale
 }
 
 // Fin du programme --------------------
 void traite_fin(const Commandes* rep_com,const Clients* rep_cli) {
-	int fact = 0;
-	Booleen suivant = FAUX;
+	int fact = 0; // 
+	Booleen suivant = FAUX; // on declare un booleen local qu'on initilalise a FAUX
 	if (rep_com->nb_commandes == rep_com->nb_facturations) {
 		printf(MSG_FACTURATION_FINALE);
 		for (unsigned int i = 0; i < rep_cli->nb_clients; i++) {
