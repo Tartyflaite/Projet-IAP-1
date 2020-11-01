@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 typedef enum { FAUX = 0, VRAI = 1 } Booleen; // on definie le type booléen qui n'es pas inclus dans le C
 Booleen EchoActif = FAUX; // le mode de débuggage est désactivé par défaut
@@ -79,8 +80,6 @@ typedef struct {// une commande est définie par son nom (mot), les client auque
 	Mot nom;
 	unsigned int idx_client;
 	Tache taches_par_specialite[MAX_SPECIALITES]; // nb_heures_requises==0 <=> pas de tache pour cette specialite, tache numero n est associee a la specialite n du tableau des specialites
-	int idx_trav_tache[MAX_SPECIALITES]; // pour la tache numero n est associe l'index du travailleur en charge de la tache
-	long facture;
 } Commande;
 typedef struct {//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs et qu'un entier contenant les nombre de commandes facturees
 	Commande tab_commandes[MAX_COMMANDES];
@@ -95,11 +94,9 @@ void traite_commande(Commandes* rep_com, const Clients* rep_cli) {
 	Mot nom_client; // on declare une variable locale nom_client de type mot qui contirendra le nom de client
 	get_id(cmd.nom); // on recupere aupres de l'utilisateur le nom de la commnde
 	get_id(nom_client); // on recupere aupres de l'utilisateur le nom du client
-	cmd.facture = -1; // on initialise la raviable facrue de cmd a -1
 	for (unsigned int i = 0; i < MAX_SPECIALITES; i++) { // on parcourt l'ensemble du tableau tache_par_specialite de cmd
 		cmd.taches_par_specialite[i].nb_heures_effectuees = 0; // on inistialise la valeur de nb_heures_effectuees a 0 pour la tache d'index i
 		cmd.taches_par_specialite[i].nb_heures_requises = 0; // on inistialise la valeur de nb_heures_requises a 0 pour la tache d'index i
-		cmd.idx_trav_tache[i] = -1; // on initialise ma valeur de l'index du travailleur associé a la tache i a -1 (non assignee)
 	}
 	for (unsigned int i = 0; i < rep_cli->nb_clients; i++) { // on parcours l'ensemble des clients enregistres
 		if (strcmp(nom_client, rep_cli->tab_clients[i]) == 0) {// on verifie si le nom du client renseignee par l'utilisateur et le meme que celui enregistré a l'emplacement dindex i
