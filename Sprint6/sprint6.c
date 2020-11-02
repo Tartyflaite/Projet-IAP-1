@@ -106,7 +106,7 @@ void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_tr
 void traite_specialites(const Specialites* rep_spe); // affiche les specilaites traitees
 void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav); //cree une nouvelle tache dans la commande demandee pour la specialite demandee, la tache est ensuite assignee a un travailleur
 void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli, int* idx_spe_passe, int* idx_com_passe); // fait progresser la tache demandee du nombre d'heure spécifiée, si laache est  complétée on enclanche la facturation
-void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe); // affiche les tache assignees au travailleur demande ainsi que lenmbre d'heure qu'il reste  a effetuer pour les tache en question
+void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe); // affiche les tache assignees au travailleur demande ainsi que le nombre d'heure qu'il reste  a effetuer pour les tache en question
 void traite_passe(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav); // reassigne la tahe a un autre travailleur a pres un "traite_porgression" uniquement
 void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_com, Travailleurs* rep_trav); // la tache donnée en arametre est assignée a un travailleur
 void traite_facturation(int indx_com,const Specialites* rep_spe, Commandes* rep_com, const Clients* rep_cli); // verifie que toutes les tache d'une commande sont terminees et, si c'est la cas, calcule et enregistre la facture 
@@ -461,7 +461,7 @@ void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const
 						else suivant = VRAI;
 						requis = rep_com->tab_commandes[j].taches_par_specialite[k].nb_heures_requises;
 						effectuees = rep_com->tab_commandes[j].taches_par_specialite[k].nb_heures_effectuees;
-						diff = requis - effectuees; // on affecte a diff la diffecrence entre requis et effectuees
+						diff = requis - effectuees;
 						printf(MSG_CHARGE_TACHE, rep_com->tab_commandes[j].nom, rep_spe->tab_specialites[k].nom, diff);
 					}
 				}
