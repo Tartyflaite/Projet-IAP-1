@@ -24,6 +24,7 @@ Booleen EchoActif = FAUX; // le mode de débuggage est désactivé par défaut
 #define MSG_SUPERVISION "## consultation de l'avancement des commandes\n"
 #define MSG_CHARGE "## consultation de la charge de travail de \"%s\"\n"
 #define MSG_COMMANDE "## nouvelle commande \"%s\", par client \"%s\"\n"
+
 // Lexemes -------------------------------------------------------------------- 
 #define LGMOT 35 //longueur d'un mot (35 caracteres)
 #define NBCHIFFREMAX 5  // taille d'un nombre (5 chiffres maximums)
