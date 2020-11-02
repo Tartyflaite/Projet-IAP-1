@@ -81,14 +81,20 @@ typedef struct { // une tache est définie pas sont nombre d'heures requises ain
 	unsigned int nb_heures_requises;
 	unsigned int nb_heures_effectuees;
 } Tache;
-typedef struct {// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel), les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
+// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel)
+// les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
+typedef struct {
 	Mot nom;
 	unsigned int idx_client;
-	Tache taches_par_specialite[MAX_SPECIALITES]; // nb_heures_requises==0 <=> pas de tache pour cette specialite, tache numero n est associee a la specialite n du tableau des specialites
+	Tache taches_par_specialite[MAX_SPECIALITES]; 
+	// nb_heures_requises==0 <=> pas de tache pour cette specialite
+	// tache numero n est associee a la specialite n du tableau des specialites
 	int idx_trav_tache[MAX_SPECIALITES]; // pour la tache numero n est associe l'index du travailleur en charge de la tache, idx=-1 <=> tache non assignée
 	long facture; // facture=-1 <=> facture non calculee
 } Commande;
-typedef struct {//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs et qu'un entier contenant les nombre de commandes facturees
+//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs 
+//et qu'un entier contenant les nombre de commandes facturees
+typedef struct {
 	Commande tab_commandes[MAX_COMMANDES];
 	unsigned int nb_commandes;
 	unsigned int nb_facturations;
@@ -102,16 +108,22 @@ void traite_commande(Commandes* rep_com, const Clients* rep_cli);// permet de re
 void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com); // affiche l'etat de toutes les taches pour toutes les commandes
 void traite_client(const Clients* rep_cli, const Commandes* rep_com);// recuper le nom du client a afficher (ou la commande "tous" pour afficher tout les clients)
 void affiche_clients(const Clients* rep_cli, const Commandes* rep_com, int i);// affiche les commandes effectues par un client
-void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);// recuper le nom du travailleur a afficher (ou la commande "tous" pour afficher tout les travailleurs)
+// recuper le nom du travailleur a afficher (ou la commande "tous" pour afficher tout les travailleurs)
+void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);
 void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav, int i);// affiche les travailleurs maitrisiant la spécialité demandée
 void traite_specialites(const Specialites* rep_spe); // affiche les specilaites traitees
-void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav); //cree une nouvelle tache dans la commande demandee pour la specialite demandee, la tache est ensuite assignee a un travailleur
-void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli); // fait progresser la tache demandee du nombre d'heure spécifiée, si laache est  complétée on enclanche la facturation
-void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe); // affiche les tache assignees au travailleur demande ainsi que lenmbre d'heure qu'il reste  a effetuer pour les tache en question
+//cree une nouvelle tache dans la commande demandee pour la specialite demandee, la tache est ensuite assignee a un travailleur
+void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav); 
+// fait progresser la tache demandee du nombre d'heure spécifiée, si laache est  complétée on enclanche la facturation
+void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli); 
+ // affiche les tache assignees au travailleur demande ainsi que lenmbre d'heure qu'il reste  a effetuer pour les tache en question
+void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe);
 void traite_passe(); // inutile
 void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_com, Travailleurs* rep_trav); // la tache donnée en arametre est assignée a un travailleur
-void traite_facturation(int indx_com,const Specialites* rep_spe, Commandes* rep_com, const Clients* rep_cli); // verifie que toutes les tache d'une commande sont terminees et, si c'est la cas, calcule et enregistre la facture 
-void traite_fin(const Commandes* rep_com, const Clients* rep_cli); // verifie que toutes les commnades ont bien étés facturées. Si c'est le cas affiche la liste des clients ainsi que le prix a payer pour chaque client avant de terminer le programme
+// verifie que toutes les tache d'une commande sont terminees et, si c'est la cas, calcule et enregistre la facture 
+void traite_facturation(int indx_com,const Specialites* rep_spe, Commandes* rep_com, const Clients* rep_cli); 
+// verifie que toutes les commnades ont bien étés facturées. Si c'est le cas affiche la liste des clients ainsi que le prix a payer pour chaque client avant de terminer le programme
+void traite_fin(const Commandes* rep_com, const Clients* rep_cli); 
 void traite_interruption(); // interromp le programme avant une fin complete du fonctionnement
 
 
@@ -414,7 +426,9 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 			
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // parcoursde l'ensemble des specialites
 				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
-				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {// on verifie si la specialite renseignee est la meme que celle d'index j et que requis est non nul
+
+				// on verifie si la specialite renseignee est la meme que celle d'index j et que requis est non nul
+				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {
 
 					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure; //on ajoute nbr_heures au nombre d'heures effectuees pour la tache d'index j
 					rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail -= nbr_heure;
@@ -424,7 +438,8 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 					diff = requis - effectuees;
 
 					if (diff<=0) {
-						rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail += diff; // compensation du nombres d'heures de travail a effectuer si depassement (effectuees>requis)
+						// compensation du nombres d'heures de travail a effectuer si depassement (effectuees>requis)
+						rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail += diff; 
 						rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees = requis; // mise a niveau du nb d'heures effectues (en cas de dépassement)
 						rep_com->tab_commandes[i].idx_trav_tache[j] = -1; // reinitialisation de l'asssignation
 						traite_facturation(i, rep_spe, rep_com,rep_cli); // facturation de la commande d'index i
@@ -475,7 +490,9 @@ void traite_passe() {
 }
 
 // Assignation -------------------------
-void traite_assignation(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) { // assigne a un travilleur la tache d'index idx_spe de la commande d'index idx_com
+void traite_assignation(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) { 
+	// assigne a un travilleur la tache d'index idx_spe de la commande d'index idx_com
+	
 	Booleen suivant = FAUX; 
 	int affecter = -1, requis, effectuees, diff;
 	for (unsigned int i = 0; i < rep_trav->nb_travailleurs; i++) { // parcours des travailleurs

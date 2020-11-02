@@ -418,7 +418,9 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 			
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // parcoursde l'ensemble des specialites
 				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
-				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {// on verifie si la specialite renseignee est la meme que celle d'index j et que requis est non nul
+				
+				// on verifie si la specialite renseignee est la meme que celle d'index j et que requis est non nul
+				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {
 
 					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure; //on ajoute nbr_heures au nombre d'heures effectuees pour la tache d'index j
 					rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail -= nbr_heure;
@@ -428,7 +430,8 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 					diff = requis - effectuees;
 
 					if (diff<=0) {
-						rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail += diff; // compensation du nombres d'heures de travail a effectuer si depassement (effectuees>requis)
+						// compensation du nombres d'heures de travail a effectuer si depassement (effectuees>requis)
+						rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail += diff; 
 						rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees = requis; // mise a niveau du nb d'heures effectues (en cas de dépassement)
 						rep_com->tab_commandes[i].idx_trav_tache[j] = -1; // reinitialisation de l'asssignation
 					}
@@ -478,7 +481,8 @@ void traite_passe() {
 }
 
 // Assignation -------------------------
-void traite_assignation(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) { // assigne a un travilleur la tache d'index idx_spe de la commande d'index idx_com
+// assigne a un travilleur la tache d'index idx_spe de la commande d'index idx_com
+void traite_assignation(const int idx_com, const int idx_spe, Commandes* rep_com, Travailleurs* rep_trav) { 
 	Booleen suivant = FAUX; 
 	int affecter = -1, requis, effectuees, diff;
 	for (unsigned int i = 0; i < rep_trav->nb_travailleurs; i++) { // parcours des travailleurs

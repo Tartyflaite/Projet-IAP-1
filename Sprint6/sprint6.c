@@ -80,14 +80,21 @@ typedef struct { // une tache est définie pas sont nombre d'heures requises ain
 	unsigned int nb_heures_requises;
 	unsigned int nb_heures_effectuees;
 } Tache;
-typedef struct {// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel), les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
+
+// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel)
+// les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
+typedef struct {
 	Mot nom;
 	unsigned int idx_client;
-	Tache taches_par_specialite[MAX_SPECIALITES]; // nb_heures_requises==0 <=> pas de tache pour cette specialite, tache numero n est associee a la specialite n du tableau des specialites
+	Tache taches_par_specialite[MAX_SPECIALITES];
+	// nb_heures_requises==0 <=> pas de tache pour cette specialite
+	// tache numero n est associee a la specialite n du tableau des specialites
 	int idx_trav_tache[MAX_SPECIALITES]; // pour la tache numero n est associe l'index du travailleur en charge de la tache, idx=-1 <=> tache non assignée
 	long facture; // facture=-1 <=> facture non calculee
 } Commande;
-typedef struct {//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs et qu'un entier contenant les nombre de commandes facturees
+//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs 
+// et qu'un entier contenant les nombre de commandes facturees
+typedef struct {
 	Commande tab_commandes[MAX_COMMANDES];
 	unsigned int nb_commandes;
 	unsigned int nb_facturations;
