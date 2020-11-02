@@ -30,6 +30,7 @@ Booleen EchoActif = FAUX; // le mode de débuggage est désactivé par défaut
 #define LGMOT 35 //longueur d'un mot (35 caracteres)
 #define NBCHIFFREMAX 5 // taille d'un nombre (5 chiffres maximums)
 typedef char Mot[LGMOT + 1]; // définition du type mot
+
 void get_id(Mot id) { //fonction de récupréation d'un mot
 	scanf("%s", id);
 	if (EchoActif) printf(">>echo %s\n", id); // si le mode débuggage est activé on affiche le mot entre precedemment
