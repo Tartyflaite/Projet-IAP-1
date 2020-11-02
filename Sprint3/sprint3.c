@@ -78,12 +78,18 @@ typedef struct { // une tache est définie pas sont nombre d'heures requises ain
 	unsigned int nb_heures_requises;
 	unsigned int nb_heures_effectuees;
 } Tache;
-typedef struct {// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel), les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
+// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel),
+// les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
+typedef struct {
 	Mot nom;
 	unsigned int idx_client;
-	Tache taches_par_specialite[MAX_SPECIALITES]; // nb_heures_requises==0 <=> pas de tache pour cette specialite, tache numero n est associee a la specialite n du tableau des specialites
+	Tache taches_par_specialite[MAX_SPECIALITES]; /* nb_heures_requises==0 <=> pas de tache pour cette specialite, 
+	tache numero n est associee a la specialite n du tableau des specialites
+*/
 } Commande;
-typedef struct {//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs et qu'un entier contenant les nombre de commandes facturees
+/*l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs 
+et qu'un entier contenant les nombre de commandes facturees*/
+typedef struct {
 	Commande tab_commandes[MAX_COMMANDES];
 	unsigned int nb_commandes;
 } Commandes;
@@ -249,7 +255,8 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com) {
 			
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // parcoursde l'ensemble des specialites
 				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
-				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {// on verifie si la specialite renseignee est la meme que celle d'index j et que requis est non nul
+				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {
+				// on verifie si la specialite renseignee est la meme que celle d'index j et que requis est non nul
 
 					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure;
 					requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
@@ -282,7 +289,8 @@ void traite_tache(const Specialites* rep_spe, Commandes* rep_com) {
 		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0) {
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // prcours de l'ensemble des specialites
 				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0) {
-					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises = nbr_heure;					break;
+					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises = nbr_heure;					
+					break;
 				}
 			}
 			break;
