@@ -405,34 +405,34 @@ void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* 
 
 // Progression -------------------------
 void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav, const Clients* rep_cli) {
-	Mot nom_commande, nom_specialite; // declaration de deux variables de type mot qui contiendront respectivene le nom de la commande et le nom de la specialite
+	Mot nom_commande, nom_specialite; 
 	get_id(nom_commande); // recuperation du nom de la commande aupres de l'utilisateur
 	get_id(nom_specialite); // recuperation du nom de la specialite aupres de l'utilisateur
-	int nbr_heure = get_int(),diff, requis, effectuees; // declaration d'une variable de type int et recuperation aupres de l'utilisateur du nombred'heure de la tache a effectuer, declaration de trois variables simplificatrices
+	int nbr_heure = get_int(),diff, requis, effectuees;
 	for (unsigned int i = 0; i < rep_com->nb_commandes; i++) { // parcours de l'ensemble des commandes
-		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0 && rep_com->tab_commandes[i].facture<0) { // on verifie si la commande renseignee est la meme que celle d'index i et que la facture pour la commande d'index i est negative
+		if (strcmp(rep_com->tab_commandes[i].nom, nom_commande) == 0 && rep_com->tab_commandes[i].facture<0) {
 			
 			for (unsigned int j = 0; j < rep_spe->nb_specialites; j++) { // parcoursde l'ensemble des specialites
-				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises; // on affecte a requis le nombre d'heures requises pour pour la tache d'index j de la commandes d'index i
+				requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {// on verifie si la specialite renseignee est la meme que celle d'index j et que requis est non nul
 
 					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure; //on ajoute nbr_heures au nombre d'heures effectuees pour la tache d'index j
-					rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail -= nbr_heure; // on enleve nbr_heure au nmbre d'heure de travail du travailleur en charge de a tache d'index j
+					rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail -= nbr_heure;
 
-					requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises; // on affecte a requis le nombre d'heures requises pour la tache j
-					effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees; // on affecte a effectuees la nombre d'heures effectuees pour la tache j
-					diff = requis - effectuees; // on affecte a diff la diffecrence entre requis et effectuees
+					requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
+					effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees;
+					diff = requis - effectuees;
 
-					if (diff<=0) { // on verifie si diff est inferieur ou egal a zero <=> nb d'heures effectuees >= nb d'heures requises
+					if (diff<=0) {
 						rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail += diff; // compensation du nombres d'heures de travail a effectuer si depassement (effectuees>requis)
 						rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees = requis; // mise a niveau du nb d'heures effectues (en cas de dépassement)
 						rep_com->tab_commandes[i].idx_trav_tache[j] = -1; // reinitialisation de l'asssignation
 						traite_facturation(i, rep_spe, rep_com,rep_cli); // facturation de la commande d'index i
 					}
-					break; // interruption de la boucle
+					break;
 				}
 			}
-			break; // interruption de la boucle
+			break;
 		}
 	}
 }

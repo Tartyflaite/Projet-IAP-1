@@ -418,7 +418,7 @@ void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travaill
 				if (strcmp(rep_spe->tab_specialites[j].nom, nom_specialite) == 0 && requis!=0) {// on verifie si la specialite renseignee est la meme que celle d'index j et que requis est non nul
 
 					rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees += nbr_heure; //on ajoute nbr_heures au nombre d'heures effectuees pour la tache d'index j
-					rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail -= nbr_heure; // on enleve nbr_heure au nmbre d'heure de travail du travailleur en charge de a tache d'index j
+					rep_trav->tab_travailleurs[rep_com->tab_commandes[i].idx_trav_tache[j]].nb_heures_travail -= nbr_heure;
 
 					requis = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_requises;
 					effectuees = rep_com->tab_commandes[i].taches_par_specialite[j].nb_heures_effectuees;
