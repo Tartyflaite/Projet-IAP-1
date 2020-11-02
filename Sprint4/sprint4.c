@@ -79,13 +79,19 @@ typedef struct { // une tache est définie pas sont nombre d'heures requises ain
 	unsigned int nb_heures_requises;
 	unsigned int nb_heures_effectuees;
 } Tache;
-typedef struct {// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel), les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
+// une commande est définie par son nom (mot), les client auquelle elle est associee (entier naturel)
+// les taches qui lui sont associeesla traveilleurs en charge des taches ainsi que la facture qui lui est associée
+typedef struct {
 	Mot nom;
 	unsigned int idx_client;
-	Tache taches_par_specialite[MAX_SPECIALITES]; // nb_heures_requises==0 <=> pas de tache pour cette specialite, tache numero n est associee a la specialite n du tableau des specialites
+	Tache taches_par_specialite[MAX_SPECIALITES]; 
+	// nb_heures_requises==0 <=> pas de tache pour cette specialite,
+	// tache numero n est associee a la specialite n du tableau des specialites
 	int idx_trav_tache[MAX_SPECIALITES]; // pour la tache numero n est associe l'index du travailleur en charge de la tache
 } Commande;
-typedef struct {//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs et qu'un entier contenant les nombre de commandes facturees
+//l'ensemble des commandes est regroupe dans une structure contenant un tableau de travailleur ainsi qu'un entier contenant le nombre de travailleurs 
+//et qu'un entier contenant les nombre de commandes facturees
+typedef struct {
 	Commande tab_commandes[MAX_COMMANDES];
 	unsigned int nb_commandes;
 } Commandes;
@@ -98,12 +104,16 @@ void traite_commande(Commandes* rep_com, const Clients* rep_cli);// permet de re
 void traite_supervision(const Specialites* rep_spe, const Commandes* rep_com); // affiche l'etat de toutes les taches pour toutes les commandes
 void traite_client(const Clients* rep_cli, const Commandes* rep_com);// recuper le nom du client a afficher (ou la commande "tous" pour afficher tout les clients)
 void affiche_clients(const Clients* rep_cli, const Commandes* rep_com, int i);// affiche les commandes effectues par un client
-void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);// recuper le nom du travailleur a afficher (ou la commande "tous" pour afficher tout les travailleurs)
+// recuper le nom du travailleur a afficher (ou la commande "tous" pour afficher tout les travailleurs)
+void traite_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav);
 void affiche_travailleurs(const Specialites* rep_spe, const Travailleurs* rep_trav, int i);// affiche les travailleurs maitrisiant la spécialité demandée
 void traite_specialites(const Specialites* rep_spe); // affiche les specilaites traitees
-void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav); //cree une nouvelle tache dans la commande demandee pour la specialite demandee, la tache est ensuite assignee a un travailleur
-void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav); // fait progresser la tache demandee du nombre d'heure spécifiée, si laache est  complétée on enclanche la facturation
-void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe); // affiche les tache assignees au travailleur demande ainsi que lenmbre d'heure qu'il reste  a effetuer pour les tache en question
+//cree une nouvelle tache dans la commande demandee pour la specialite demandee, la tache est ensuite assignee a un travailleur
+void traite_tache(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav); 
+ // fait progresser la tache demandee du nombre d'heure spécifiée, si laache est  complétée on enclanche la facturation
+void traite_progression(const Specialites* rep_spe, Commandes* rep_com, Travailleurs* rep_trav);
+ // affiche les tache assignees au travailleur demande ainsi que lenmbre d'heure qu'il reste  a effetuer pour les tache en question
+void traite_charge(const Travailleurs* rep_trav, const Commandes* rep_com, const Specialites* rep_spe);
 void traite_passe(); //affiche un message
 void traite_assignation(const int indx_com, const int indx_spe, Commandes* rep_com, Travailleurs* rep_trav); // la tache donnée en arametre est assignée a un travailleur
 void traite_interruption(); // interromp le programme avant une fin complete du fonctionnement
